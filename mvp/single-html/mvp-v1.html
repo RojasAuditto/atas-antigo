@@ -1,0 +1,3197 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="description" content="MVP V1 completo em um único arquivo HTML.">
+  <title>MVP V1 · Visão compartilhada</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>/* mvp/public-share/styles.css */
+:root {
+  color-scheme: light;
+  --background: 205 40% 98%;
+  --foreground: 215 25% 14%;
+  --card: 210 25% 98%;
+  --canvas: 0 0% 100%;
+  --muted: 210 30% 96%;
+  --muted-foreground: 215 14% 45%;
+  --border: 210 25% 90%;
+  --primary: 209 84% 36%;
+  --primary-foreground: 0 0% 100%;
+  --primary-glow: 197 71% 70%;
+  --brand-deep: 207 85% 28%;
+  --brand-vivid: 205 83% 39%;
+  --success: 160 70% 38%;
+  --success-ink: 155 69% 28%;
+  --warning: 38 92% 50%;
+  --warning-ink: 39 93% 28%;
+  --destructive: 4 68% 44%;
+  --rose: 346 70% 55%;
+  --indigo: 215 60% 50%;
+  --radius: 5px;
+  --sidebar-open: 240px;
+  --sidebar-closed: 64px;
+  --ease-hub: cubic-bezier(0.32, 0.72, 0, 1);
+  font-family:
+    "Oxanium",
+    system-ui,
+    sans-serif;
+}
+.dark {
+  color-scheme: dark;
+  --background: 0 0% 2.7%;
+  --foreground: 210 17% 92%;
+  --card: 220 10% 9%;
+  --canvas: 0 0% 2.7%;
+  --muted: 207 28% 14%;
+  --muted-foreground: 215 14% 60%;
+  --border: 207 22% 17%;
+  --primary: 197 71% 70%;
+  --primary-foreground: 207 60% 8%;
+  --primary-glow: 197 71% 70%;
+  --brand-deep: 197 71% 70%;
+  --brand-vivid: 197 71% 70%;
+  --success: 160 60% 45%;
+  --success-ink: 160 60% 45%;
+  --warning: 38 92% 55%;
+  --warning-ink: 38 92% 55%;
+  --destructive: 0 86% 70%;
+  --rose: 346 78% 70%;
+  --indigo: 215 71% 68%;
+}
+* {
+  box-sizing: border-box;
+}
+html {
+  min-width: 320px;
+  min-height: 100%;
+  background: hsl(var(--background));
+}
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: hsl(var(--foreground));
+  background:
+    radial-gradient(
+      circle at 95% 95%,
+      hsl(207 80% 85% / .25),
+      transparent 45%),
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / .5),
+      hsl(var(--background) / .85));
+  font-size: 14px;
+  line-height: 1.5;
+  text-rendering: optimizeLegibility;
+}
+.dark body {
+  background: hsl(var(--background));
+}
+button,
+input,
+select {
+  color: inherit;
+  font: inherit;
+}
+button {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+  opacity: .55;
+}
+[hidden] {
+  display: none !important;
+}
+::selection {
+  color: hsl(var(--primary-foreground));
+  background: hsl(var(--primary) / .85);
+}
+:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.icon {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.app-shell {
+  min-height: 100vh;
+}
+.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 40;
+  display: flex;
+  width: var(--sidebar-closed);
+  flex-direction: column;
+  overflow: hidden;
+  border-right: 1px solid hsl(var(--border));
+  background: hsl(var(--canvas));
+  padding: 12px 8px;
+  transition: width 500ms var(--ease-hub);
+}
+.sidebar:hover,
+.sidebar:focus-within {
+  width: var(--sidebar-open);
+}
+.sidebar-logo {
+  display: flex;
+  height: 40px;
+  align-items: center;
+  overflow: hidden;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  padding: 0 6px;
+  text-align: left;
+  text-decoration: none;
+}
+.logo-mark {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 3px;
+  color: hsl(var(--primary-foreground));
+  background:
+    linear-gradient(
+      135deg,
+      hsl(var(--brand-deep)),
+      hsl(var(--brand-vivid)));
+  font-size: 12px;
+  font-weight: 700;
+}
+.logo-copy {
+  min-width: 170px;
+  margin-left: 12px;
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+.sidebar:hover .logo-copy,
+.sidebar:focus-within .logo-copy {
+  opacity: 1;
+}
+.logo-copy strong,
+.logo-copy span {
+  display: block;
+  white-space: nowrap;
+}
+.logo-copy strong {
+  font-size: 14px;
+  font-weight: 600;
+}
+.logo-copy span {
+  color: hsl(var(--muted-foreground));
+  font-size: 10px;
+}
+.side-nav {
+  display: grid;
+  gap: 4px;
+  margin-top: 20px;
+}
+.side-link {
+  display: flex;
+  height: 40px;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  padding: 0 11px;
+  color: hsl(var(--muted-foreground));
+  background: transparent;
+  text-decoration: none;
+  transition:
+    color 200ms,
+    background 200ms,
+    border-color 200ms;
+}
+.side-link:hover {
+  color: hsl(var(--foreground));
+  background: hsl(var(--foreground) / .04);
+}
+.side-link.active {
+  color: hsl(var(--primary));
+  border-color: hsl(var(--primary) / .3);
+  background:
+    linear-gradient(
+      88.76deg,
+      rgba(76, 124, 149, .08) 1.14%,
+      rgba(76, 124, 149, .1) 98.42%);
+}
+.side-label {
+  min-width: 160px;
+  margin-left: 12px;
+  opacity: 0;
+  white-space: nowrap;
+  transition: opacity 300ms ease;
+}
+.sidebar:hover .side-label,
+.sidebar:focus-within .side-label {
+  opacity: 1;
+}
+.sidebar-foot {
+  min-width: 190px;
+  margin-top: auto;
+  padding: 8px 10px;
+  color: hsl(var(--muted-foreground));
+  font-size: 10px;
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+.sidebar:hover .sidebar-foot,
+.sidebar:focus-within .sidebar-foot {
+  opacity: 1;
+}
+.main-column {
+  min-height: 100vh;
+  padding: 64px 0 0 var(--sidebar-closed);
+  transition: padding-left 500ms var(--ease-hub);
+}
+.sidebar:hover + .main-column,
+.sidebar:focus-within + .main-column {
+  padding-left: var(--sidebar-open);
+}
+.top-header {
+  position: fixed;
+  inset: 0 0 auto var(--sidebar-closed);
+  z-index: 30;
+  display: flex;
+  height: 64px;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid hsl(var(--border));
+  background: hsl(var(--canvas) / .95);
+  padding: 0 24px;
+  backdrop-filter: blur(12px);
+  transition: left 500ms var(--ease-hub);
+}
+.sidebar:hover + .main-column .top-header,
+.sidebar:focus-within + .main-column .top-header {
+  left: var(--sidebar-open);
+}
+.breadcrumb {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  color: hsl(var(--muted-foreground));
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.breadcrumb strong {
+  color: hsl(var(--foreground));
+  font-weight: 500;
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.demo-chip,
+.scope-chip {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid hsl(var(--warning) / .3);
+  border-radius: var(--radius);
+  color: hsl(var(--warning-ink));
+  background: hsl(var(--warning) / .1);
+  padding: 4px 9px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+.demo-chip::before,
+.scope-chip::before {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+  content: "";
+}
+.icon-button {
+  display: inline-grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  color: hsl(var(--muted-foreground));
+  background: transparent;
+}
+.icon-button:hover {
+  color: hsl(var(--foreground));
+  background: hsl(var(--foreground) / .04);
+}
+.mobile-menu-button {
+  display: none;
+}
+.mobile-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: hsl(215 25% 8% / .72);
+  backdrop-filter: blur(5px);
+}
+.mobile-drawer {
+  display: flex;
+  width: min(280px, calc(100% - 44px));
+  height: 100%;
+  flex-direction: column;
+  border-right: 1px solid hsl(var(--border));
+  background: hsl(var(--canvas));
+  animation: drawer-in 220ms var(--ease-hub);
+}
+@keyframes drawer-in {
+  from {
+    transform: translateX(-100%);
+  }
+}
+.mobile-drawer-head {
+  display: flex;
+  height: 64px;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid hsl(var(--border));
+  padding: 0 10px 0 8px;
+}
+.mobile-logo-copy {
+  margin-left: 12px;
+}
+.mobile-logo-copy strong,
+.mobile-logo-copy span {
+  display: block;
+}
+.mobile-logo-copy strong {
+  font-size: 13px;
+  font-weight: 600;
+}
+.mobile-logo-copy span {
+  color: hsl(var(--muted-foreground));
+  font-size: 10px;
+}
+.mobile-nav {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+}
+.mobile-nav .side-link {
+  width: 100%;
+  gap: 12px;
+}
+.mobile-drawer-foot {
+  margin-top: auto;
+  padding: 16px;
+  color: hsl(var(--muted-foreground));
+  font-size: 10px;
+}
+.canvas {
+  min-height: calc(100vh - 80px);
+  margin: 12px;
+  border: 1px solid hsl(var(--foreground) / .04);
+  border-radius: 8px;
+  background: hsl(var(--canvas));
+  padding: 24px;
+  box-shadow: 0 1px 2px hsl(var(--foreground) / .04);
+}
+.page-stack {
+  display: grid;
+  gap: 24px;
+  max-width: 1500px;
+  margin: 0 auto;
+  animation: fade-in 300ms ease-out;
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+.page-heading {
+  min-width: 0;
+}
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: hsl(var(--primary));
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+}
+.eyebrow-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: hsl(var(--primary));
+  box-shadow: 0 0 0 4px hsl(var(--primary) / .1);
+}
+.page-title {
+  margin: 6px 0 4px;
+  font-size: clamp(24px, 3vw, 31px);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -.035em;
+}
+.page-subtitle {
+  max-width: 840px;
+  margin: 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 13px;
+}
+.page-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.button {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  padding: 0 14px;
+  color: hsl(var(--foreground));
+  background: hsl(var(--canvas));
+  font-size: 13px;
+  font-weight: 500;
+  transition:
+    transform 180ms,
+    filter 180ms,
+    background 180ms;
+}
+.button:hover {
+  transform: translateY(-1px);
+  background: hsl(var(--muted));
+}
+.button.primary {
+  border-color: transparent;
+  color: hsl(var(--primary-foreground));
+  background:
+    linear-gradient(
+      135deg,
+      hsl(var(--brand-deep)),
+      hsl(var(--brand-vivid)));
+  box-shadow: 0 8px 24px -10px hsl(var(--primary) / .45);
+}
+.button.primary:hover {
+  filter: brightness(1.05);
+}
+.button.ghost {
+  border-color: transparent;
+  background: transparent;
+}
+.button.danger {
+  border-color: hsl(var(--destructive) / .3);
+  color: hsl(var(--destructive));
+  background: hsl(var(--destructive) / .08);
+}
+.button.full {
+  width: 100%;
+}
+.mvp-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border: 1px solid hsl(var(--warning) / .25);
+  border-radius: 6px;
+  color: hsl(var(--warning-ink));
+  background: hsl(var(--warning) / .08);
+  padding: 11px 13px;
+  font-size: 11px;
+}
+.mvp-note strong {
+  font-weight: 600;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+.stats-grid.stats-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.stat-card {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px;
+  padding: 18px;
+  background: hsl(var(--card));
+}
+.stat-card.blue {
+  border-color: hsl(var(--primary) / .18);
+  background: hsl(var(--primary) / .045);
+}
+.stat-card.emerald {
+  border-color: hsl(var(--success) / .18);
+  background: hsl(var(--success) / .045);
+}
+.stat-card.amber {
+  border-color: hsl(var(--warning) / .2);
+  background: hsl(var(--warning) / .055);
+}
+.stat-card.indigo {
+  border-color: hsl(var(--indigo) / .2);
+  background: hsl(var(--indigo) / .05);
+}
+.stat-card.rose {
+  border-color: hsl(var(--rose) / .18);
+  background: hsl(var(--rose) / .045);
+}
+.stat-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+  color: hsl(var(--muted-foreground));
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  white-space: nowrap;
+}
+.stat-dot {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: currentColor;
+}
+.blue .stat-label,
+.blue .stat-value {
+  color: hsl(var(--primary));
+}
+.emerald .stat-label,
+.emerald .stat-value {
+  color: hsl(var(--success-ink));
+}
+.amber .stat-label,
+.amber .stat-value {
+  color: hsl(var(--warning-ink));
+}
+.indigo .stat-label,
+.indigo .stat-value {
+  color: hsl(var(--indigo));
+}
+.rose .stat-label,
+.rose .stat-value {
+  color: hsl(var(--rose));
+}
+.stat-value {
+  margin-top: 12px;
+  overflow: hidden;
+  font-size: clamp(22px, 2.2vw, 32px);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -.045em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.stat-subtitle {
+  margin-top: 9px;
+  color: hsl(var(--muted-foreground));
+  font-size: 11px;
+}
+.tabs {
+  display: flex;
+  max-width: 100%;
+  overflow-x: auto;
+  border-bottom: 1px solid hsl(var(--border));
+  scrollbar-width: thin;
+}
+.tab {
+  min-height: 44px;
+  flex: 0 0 auto;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  color: hsl(var(--muted-foreground));
+  background: transparent;
+  padding: 0 16px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.tab:hover {
+  color: hsl(var(--foreground));
+  background: hsl(var(--foreground) / .025);
+}
+.tab.active {
+  border-bottom-color: hsl(var(--primary));
+  color: hsl(var(--primary));
+}
+.tab-count {
+  display: inline-grid;
+  min-width: 20px;
+  min-height: 18px;
+  place-items: center;
+  margin-left: 6px;
+  border-radius: var(--radius);
+  background: hsl(var(--foreground) / .05);
+  padding: 0 5px;
+  font-size: 9px;
+}
+.tab-panel {
+  animation: fade-in 220ms ease-out;
+}
+.overview-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(300px, .75fr);
+  gap: 16px;
+}
+.section-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid hsl(var(--border) / .75);
+  border-radius: 8px;
+  background: hsl(var(--card));
+}
+.section-head {
+  display: flex;
+  min-height: 60px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid hsl(var(--border));
+  padding: 13px 16px;
+}
+.section-head h2 {
+  margin: 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+.section-head p {
+  margin: 3px 0 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 11px;
+}
+.section-body {
+  padding: 16px;
+}
+.total-progress {
+  margin-bottom: 20px;
+}
+.progress-copy {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 9px;
+}
+.progress-copy span {
+  color: hsl(var(--muted-foreground));
+  font-size: 11px;
+}
+.progress-copy strong {
+  color: hsl(var(--primary));
+  font-size: 18px;
+  font-weight: 600;
+}
+.progress-track {
+  height: 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: hsl(var(--muted));
+}
+.progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: hsl(var(--primary));
+}
+.company-bars {
+  display: grid;
+  gap: 13px;
+}
+.company-bar-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+  font-size: 11px;
+}
+.company-bar-label span:last-child {
+  color: hsl(var(--muted-foreground));
+  font-variant-numeric: tabular-nums;
+}
+.rule-list {
+  display: grid;
+  gap: 9px;
+}
+.rule-item {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 10px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 6px;
+  background: hsl(var(--canvas) / .65);
+  padding: 11px;
+}
+.rule-icon {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border-radius: 6px;
+  color: hsl(var(--primary));
+  background: hsl(var(--primary) / .1);
+}
+.rule-icon.emerald {
+  color: hsl(var(--success-ink));
+  background: hsl(var(--success) / .1);
+}
+.rule-icon.amber {
+  color: hsl(var(--warning-ink));
+  background: hsl(var(--warning) / .1);
+}
+.rule-icon.indigo {
+  color: hsl(var(--indigo));
+  background: hsl(var(--indigo) / .1);
+}
+.rule-icon.rose {
+  color: hsl(var(--rose));
+  background: hsl(var(--rose) / .1);
+}
+.rule-item strong {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+}
+.rule-item p {
+  margin: 3px 0 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 10px;
+}
+.entity-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.entity-card {
+  border: 1px solid hsl(var(--foreground) / .07);
+  border-radius: 8px;
+  background: hsl(var(--foreground) / .025);
+  padding: 15px;
+  transition:
+    transform 180ms,
+    background 180ms,
+    border-color 180ms;
+}
+.entity-card:hover {
+  transform: translateY(-.5px);
+  border-color: hsl(var(--foreground) / .11);
+  background: hsl(var(--foreground) / .04);
+}
+.entity-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.entity-identity {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 11px;
+}
+.entity-copy {
+  min-width: 0;
+}
+.entity-mark,
+.avatar {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 6px;
+  color: hsl(var(--primary));
+  background: hsl(var(--primary) / .1);
+  font-size: 11px;
+  font-weight: 700;
+}
+.avatar.indigo {
+  color: hsl(var(--indigo));
+  background: hsl(var(--indigo) / .1);
+}
+.entity-name {
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.entity-meta {
+  margin-top: 3px;
+  color: hsl(var(--muted-foreground));
+  font-size: 10px;
+}
+.status {
+  display: inline-flex;
+  min-height: 24px;
+  align-items: center;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  padding: 3px 8px;
+  color: hsl(var(--muted-foreground));
+  background: hsl(var(--muted));
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+.status.regular {
+  border-color: hsl(var(--success) / .3);
+  color: hsl(var(--success-ink));
+  background: hsl(var(--success) / .1);
+}
+.status.in_progress {
+  border-color: hsl(var(--primary) / .3);
+  color: hsl(var(--primary));
+  background: hsl(var(--primary) / .1);
+}
+.status.attention {
+  border-color: hsl(var(--warning) / .3);
+  color: hsl(var(--warning-ink));
+  background: hsl(var(--warning) / .1);
+}
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 15px;
+}
+.metric span,
+.metric strong {
+  display: block;
+}
+.metric span {
+  color: hsl(var(--muted-foreground));
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+.metric strong {
+  margin-top: 4px;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.entity-progress {
+  margin-top: 14px;
+}
+.entity-progress .progress-track {
+  height: 5px;
+}
+.entity-progress-copy {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  color: hsl(var(--muted-foreground));
+  font-size: 9px;
+}
+.bar-chart {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(36px, 1fr));
+  height: 290px;
+  align-items: end;
+  gap: 12px;
+  border-bottom: 1px solid hsl(var(--border));
+  padding: 24px 8px 0;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(25% - 1px),
+      hsl(var(--border) / .7) 25%);
+}
+.bar-column {
+  display: grid;
+  height: 100%;
+  grid-template-rows: 1fr 28px;
+  align-items: end;
+  gap: 8px;
+  text-align: center;
+}
+.bar-shell {
+  display: flex;
+  height: 100%;
+  align-items: end;
+  justify-content: center;
+}
+.bar-fill {
+  width: min(34px, 72%);
+  min-height: 3px;
+  border-radius: 5px 5px 1px 1px;
+  background: hsl(var(--primary));
+}
+.bar-column:nth-child(3n+2) .bar-fill {
+  background: hsl(var(--success));
+}
+.bar-column:nth-child(3n) .bar-fill {
+  background: hsl(var(--indigo));
+}
+.bar-label {
+  color: hsl(var(--muted-foreground));
+  font-size: 10px;
+}
+.chart-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-bottom: 4px;
+  color: hsl(var(--muted-foreground));
+  font-size: 11px;
+}
+.chart-summary strong {
+  color: hsl(var(--foreground));
+  font-weight: 600;
+}
+.visibility-wrap {
+  overflow-x: auto;
+}
+.visibility-table {
+  width: 100%;
+  min-width: 640px;
+  border-collapse: collapse;
+}
+.visibility-table th,
+.visibility-table td {
+  border-bottom: 1px solid hsl(var(--border));
+  padding: 12px;
+  text-align: left;
+  font-size: 11px;
+}
+.visibility-table th {
+  color: hsl(var(--muted-foreground));
+  background: hsl(var(--muted) / .7);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.visibility-table td:not(:first-child),
+.visibility-table th:not(:first-child) {
+  text-align: center;
+}
+.yes {
+  color: hsl(var(--success-ink));
+  font-weight: 600;
+}
+.no {
+  color: hsl(var(--muted-foreground));
+}
+.public-shell {
+  min-height: 100vh;
+  background: hsl(var(--background));
+}
+.public-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  min-height: 64px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid hsl(var(--border));
+  background: hsl(var(--canvas) / .94);
+  padding: 0 max(20px, calc((100vw - 1380px) / 2));
+  backdrop-filter: blur(14px);
+}
+.public-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.public-brand-copy strong,
+.public-brand-copy span {
+  display: block;
+}
+.public-brand-copy strong {
+  font-size: 13px;
+  font-weight: 600;
+}
+.public-brand-copy span {
+  color: hsl(var(--muted-foreground));
+  font-size: 10px;
+}
+.scope-chip {
+  border-color: hsl(var(--primary) / .3);
+  color: hsl(var(--primary));
+  background: hsl(var(--primary) / .08);
+}
+.readonly-strip {
+  display: flex;
+  min-height: 38px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: hsl(var(--primary-foreground));
+  background: hsl(var(--brand-deep));
+  padding: 8px 16px;
+  font-size: 10px;
+}
+.public-main {
+  width: min(1380px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 28px 0 48px;
+}
+.public-main .page-stack {
+  gap: 22px;
+}
+.public-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 9px;
+  color: hsl(var(--muted-foreground));
+  font-size: 10px;
+}
+.public-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.lock-screen {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: hsl(var(--brand-deep));
+}
+.lock-card {
+  width: min(460px, 100%);
+  border: 1px solid hsl(0 0% 100% / .18);
+  border-radius: 8px;
+  background: hsl(var(--canvas));
+  padding: 30px;
+  box-shadow: 0 16px 40px hsl(207 85% 10% / .28);
+}
+.lock-mark {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border-radius: 6px;
+  color: hsl(var(--primary-foreground));
+  background:
+    linear-gradient(
+      135deg,
+      hsl(var(--brand-deep)),
+      hsl(var(--brand-vivid)));
+}
+.lock-card h1 {
+  margin: 18px 0 6px;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -.03em;
+}
+.lock-card > p {
+  margin: 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 12px;
+}
+.lock-context {
+  display: grid;
+  gap: 7px;
+  margin: 18px 0;
+  border: 1px solid hsl(var(--border));
+  border-radius: 6px;
+  background: hsl(var(--muted) / .65);
+  padding: 12px;
+}
+.lock-context span {
+  color: hsl(var(--muted-foreground));
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.lock-context strong {
+  font-size: 13px;
+  font-weight: 600;
+}
+.lock-error {
+  min-height: 22px;
+  padding-top: 6px;
+  color: hsl(var(--destructive));
+  font-size: 11px;
+}
+.back-button {
+  margin-top: 12px;
+}
+.field {
+  display: grid;
+  gap: 6px;
+}
+.field label {
+  font-size: 12px;
+  font-weight: 500;
+}
+.field small {
+  color: hsl(var(--muted-foreground));
+  font-size: 10px;
+}
+.input,
+.select {
+  width: 100%;
+  height: 40px;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  color: hsl(var(--foreground));
+  background: hsl(var(--canvas));
+  padding: 0 11px;
+  font-size: 13px;
+  outline: 0;
+}
+.input:focus,
+.select:focus {
+  border-color: hsl(var(--primary));
+  box-shadow: 0 0 0 3px hsl(var(--primary) / .1);
+}
+.form-error {
+  color: hsl(var(--destructive));
+  font-size: 11px;
+}
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: hsl(215 25% 8% / .72);
+  padding: 24px;
+  backdrop-filter: blur(7px);
+}
+.modal {
+  width: min(760px, 100%);
+  max-height: calc(100vh - 48px);
+  overflow: auto;
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px;
+  background: hsl(var(--canvas));
+  box-shadow: 0 16px 40px hsl(215 25% 8% / .24);
+  animation: modal-in 180ms ease-out;
+}
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(.99);
+  }
+}
+.modal-header {
+  display: flex;
+  min-height: 72px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid hsl(var(--border));
+  padding: 14px 18px;
+}
+.modal-header h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+.modal-header p {
+  margin: 4px 0 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 11px;
+}
+.modal-body {
+  display: grid;
+  gap: 18px;
+  padding: 18px;
+}
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  border-top: 1px solid hsl(var(--border));
+  background: hsl(var(--muted) / .55);
+  padding: 13px 18px;
+}
+.scope-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.scope-option {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  gap: 11px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 7px;
+  color: hsl(var(--foreground));
+  background: hsl(var(--card));
+  padding: 13px;
+  text-align: left;
+}
+.scope-option:hover {
+  border-color: hsl(var(--primary) / .4);
+}
+.scope-option.active {
+  border-color: hsl(var(--primary) / .5);
+  background: hsl(var(--primary) / .07);
+  box-shadow: 0 0 0 2px hsl(var(--primary) / .08);
+}
+.scope-option-icon {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 6px;
+  color: hsl(var(--primary));
+  background: hsl(var(--primary) / .1);
+}
+.scope-option-copy,
+.scope-option-copy strong,
+.scope-option-copy span {
+  display: block;
+}
+.scope-option-copy {
+  min-width: 0;
+}
+.scope-option-copy strong {
+  font-size: 12px;
+  font-weight: 600;
+}
+.scope-option-copy span {
+  margin-top: 3px;
+  color: hsl(var(--muted-foreground));
+  font-size: 10px;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(180px, .55fr);
+  gap: 12px;
+}
+.privacy-box {
+  display: grid;
+  gap: 8px;
+  border: 1px solid hsl(var(--success) / .2);
+  border-radius: 6px;
+  color: hsl(var(--success-ink));
+  background: hsl(var(--success) / .06);
+  padding: 12px;
+  font-size: 10px;
+}
+.privacy-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.privacy-row .icon {
+  width: 14px;
+  height: 14px;
+}
+.result-box {
+  display: grid;
+  gap: 12px;
+  border: 1px solid hsl(var(--primary) / .25);
+  border-radius: 7px;
+  background: hsl(var(--primary) / .06);
+  padding: 14px;
+}
+.result-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.result-status strong {
+  font-size: 13px;
+  font-weight: 600;
+}
+.link-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+.result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.simulation-warning {
+  color: hsl(var(--warning-ink));
+  font-size: 10px;
+}
+.toast-root {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 200;
+  width: min(360px, calc(100% - 36px));
+}
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid hsl(var(--border));
+  border-left: 3px solid hsl(var(--success));
+  border-radius: 6px;
+  background: hsl(var(--canvas));
+  padding: 12px;
+  box-shadow: 0 16px 40px hsl(var(--foreground) / .16);
+  font-size: 11px;
+  animation: modal-in 180ms ease-out;
+}
+.noscript-card {
+  width: min(520px, calc(100% - 32px));
+  margin: 80px auto;
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px;
+  background: hsl(var(--canvas));
+  padding: 24px;
+}
+@media (max-width: 1180px) {
+  .stats-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .stats-grid.stats-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .overview-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 860px) {
+  .sidebar {
+    display: none;
+  }
+  .main-column {
+    padding-left: 0;
+  }
+  .top-header {
+    left: 0;
+    padding: 0 14px;
+  }
+  .mobile-menu-button {
+    display: inline-grid;
+  }
+  .canvas {
+    margin: 8px;
+    padding: 18px;
+  }
+  .entity-grid {
+    grid-template-columns: 1fr;
+  }
+  .bar-chart {
+    gap: 7px;
+  }
+}
+@media (max-width: 640px) {
+  .demo-chip {
+    display: none;
+  }
+  .canvas {
+    padding: 14px 12px;
+  }
+  .page-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .page-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .stat-card {
+    padding: 14px 12px;
+  }
+  .stat-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+  .metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .bar-chart {
+    grid-template-columns: repeat(auto-fit, minmax(28px, 1fr));
+    height: 240px;
+    gap: 4px;
+    padding-inline: 2px;
+  }
+  .public-header {
+    padding: 0 12px;
+  }
+  .public-brand-copy span {
+    display: none;
+  }
+  .public-main {
+    width: calc(100% - 20px);
+    padding-top: 20px;
+  }
+  .scope-chip {
+    font-size: 8px;
+  }
+  .lock-card {
+    padding: 24px 20px;
+  }
+  .overlay {
+    align-items: end;
+    padding: 0;
+  }
+  .modal {
+    width: 100%;
+    max-height: 94vh;
+    border-radius: 8px 8px 0 0;
+  }
+  .scope-options,
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .modal-footer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .link-row {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 430px) {
+  .public-brand-copy {
+    display: none;
+  }
+  .scope-chip {
+    width: 30px;
+    justify-content: center;
+    overflow: hidden;
+    padding: 0;
+    font-size: 0;
+  }
+  .scope-chip::before {
+    width: 7px;
+    height: 7px;
+  }
+}
+@media print {
+  .sidebar,
+  .top-header,
+  .page-actions,
+  .tabs,
+  .readonly-strip,
+  .icon-button,
+  .mvp-note {
+    display: none !important;
+  }
+  .main-column {
+    padding: 0;
+  }
+  .canvas,
+  .public-main {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  .stat-card,
+  .section-card,
+  .entity-card {
+    break-inside: avoid;
+    box-shadow: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+/* mvp/public-share/ledger.css */
+.monthly-stack,
+.monthly-company-grid {
+  display: grid;
+  gap: 18px;
+}
+.month-control {
+  border: 1px solid hsl(var(--primary) / .2);
+  border-radius: 8px;
+  background: hsl(var(--primary) / .045);
+  padding: 18px;
+}
+.month-control-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 16px;
+}
+.month-control-head h2 {
+  margin: 4px 0;
+  font-size: 21px;
+  font-weight: 500;
+  letter-spacing: -.02em;
+  text-transform: capitalize;
+}
+.month-control-head h2 strong {
+  color: hsl(var(--primary));
+  font-weight: 600;
+}
+.month-control-head p {
+  margin: 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 12px;
+}
+.company-kicker {
+  display: block;
+  color: hsl(var(--primary));
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+.month-picker {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 7px;
+}
+.month-option {
+  position: relative;
+  display: grid;
+  min-height: 76px;
+  align-content: center;
+  gap: 3px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 6px;
+  color: hsl(var(--foreground));
+  background: hsl(var(--canvas));
+  padding: 9px;
+  text-align: left;
+}
+.month-option:hover {
+  border-color: hsl(var(--primary) / .45);
+  background: hsl(var(--primary) / .055);
+}
+.month-option.active {
+  border-color: hsl(var(--primary) / .6);
+  background: hsl(var(--primary) / .1);
+  box-shadow: 0 0 0 2px hsl(var(--primary) / .1);
+}
+.month-option.has-risk::after {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: hsl(var(--destructive));
+  content: "";
+}
+.month-option span {
+  color: hsl(var(--primary));
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.month-option strong {
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.month-option em {
+  color: hsl(var(--destructive));
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 600;
+}
+.tax-rule-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border: 1px solid hsl(var(--primary) / .22);
+  border-radius: 7px;
+  color: hsl(var(--primary));
+  background: hsl(var(--primary) / .06);
+  padding: 13px 15px;
+  font-size: 12px;
+}
+.monthly-company-card {
+  overflow: hidden;
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px;
+  background: hsl(var(--card));
+}
+.monthly-company-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  border-bottom: 1px solid hsl(var(--border));
+  padding: 17px 18px;
+}
+.monthly-company-head h3 {
+  margin: 4px 0 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+.monthly-summary {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 20px;
+}
+.monthly-summary span,
+.monthly-summary strong {
+  display: block;
+}
+.monthly-summary span {
+  color: hsl(var(--muted-foreground));
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.monthly-summary strong {
+  margin-top: 3px;
+  color: hsl(var(--foreground));
+  font-size: 14px;
+  font-weight: 600;
+  text-align: right;
+}
+.partner-flow-list {
+  display: grid;
+}
+.partner-flow {
+  display: grid;
+  grid-template-columns: minmax(300px, .85fr) minmax(0, 1.6fr);
+  align-items: center;
+  gap: 20px;
+  border-bottom: 1px solid hsl(var(--border) / .8);
+  padding: 17px 18px;
+}
+.partner-flow:last-child {
+  border-bottom: 0;
+}
+.partner-flow.negative {
+  background: hsl(var(--destructive) / .055);
+  box-shadow: inset 3px 0 hsl(var(--destructive));
+}
+.partner-flow.taxed:not(.negative) {
+  background: hsl(var(--warning) / .045);
+  box-shadow: inset 3px 0 hsl(var(--warning));
+}
+.partner-flow-identity {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+}
+.partner-flow-identity .avatar {
+  width: 42px;
+  height: 42px;
+}
+.partner-flow-identity h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+.partner-flow-identity p {
+  margin: 4px 0 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 13px;
+}
+.partner-flow-identity p strong {
+  color: hsl(var(--foreground));
+  font-weight: 600;
+}
+.flow-metrics {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 9px;
+}
+.flow-metrics > div {
+  min-width: 0;
+  border-left: 1px solid hsl(var(--border));
+  padding-left: 11px;
+}
+.flow-metrics span,
+.flow-metrics strong {
+  display: block;
+}
+.flow-metrics span {
+  color: hsl(var(--muted-foreground));
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .035em;
+}
+.flow-metrics strong {
+  margin-top: 5px;
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.positive-text {
+  color: hsl(var(--success-ink)) !important;
+}
+.negative-text {
+  color: hsl(var(--destructive)) !important;
+}
+.ledger-scroll {
+  overflow-x: auto;
+}
+.ledger-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+.ledger-table th,
+.ledger-table td {
+  border-bottom: 1px solid hsl(var(--border));
+  padding: 10px;
+  text-align: left;
+  vertical-align: top;
+}
+.ledger-table thead th {
+  color: hsl(var(--muted-foreground));
+  background: hsl(var(--muted) / .65);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+.ledger-table {
+  min-width: 1100px;
+}
+.ledger-table td {
+  font-size: 11px;
+}
+.ledger-table td > strong,
+.ledger-table td > span {
+  display: block;
+}
+.ledger-table td > strong {
+  font-weight: 600;
+}
+.ledger-table td > span {
+  margin-top: 3px;
+  color: hsl(var(--muted-foreground));
+  font-size: 9px;
+}
+.inactive-row {
+  opacity: .55;
+  text-decoration-color: hsl(var(--muted-foreground));
+}
+.row-actions {
+  display: flex;
+  gap: 2px;
+}
+.icon-button.small {
+  width: 30px;
+  height: 30px;
+}
+.icon-button.small .icon {
+  width: 14px;
+  height: 14px;
+}
+.movement-modal {
+  width: min(1120px, 100%);
+}
+.movement-layout {
+  grid-template-columns: minmax(0, 1.4fr) minmax(300px, .6fr);
+  align-items: start;
+}
+.movement-fields {
+  display: grid;
+  gap: 14px;
+}
+.form-grid.three {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.textarea {
+  width: 100%;
+  min-height: 88px;
+  resize: vertical;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  color: hsl(var(--foreground));
+  background: hsl(var(--canvas));
+  padding: 10px 11px;
+  font: inherit;
+  font-size: 12px;
+  outline: 0;
+}
+.textarea:focus {
+  border-color: hsl(var(--primary));
+  box-shadow: 0 0 0 3px hsl(var(--primary) / .1);
+}
+.check-field,
+.overdraw-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 6px;
+  background: hsl(var(--muted) / .5);
+  padding: 10px;
+  font-size: 10px;
+}
+.check-field input,
+.overdraw-check input {
+  margin-top: 3px;
+  accent-color: hsl(var(--primary));
+}
+.check-field strong,
+.check-field small {
+  display: block;
+}
+.check-field small {
+  margin-top: 2px;
+  color: hsl(var(--muted-foreground));
+}
+.overdraw-check {
+  border-color: hsl(var(--destructive) / .28);
+  color: hsl(var(--destructive));
+  background: hsl(var(--destructive) / .07);
+}
+.preview-card {
+  border: 1px solid hsl(var(--primary) / .22);
+  border-radius: 7px;
+  background: hsl(var(--primary) / .05);
+  padding: 14px;
+}
+.preview-card h3 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+.preview-card > p {
+  margin: 4px 0 14px;
+  color: hsl(var(--muted-foreground));
+  font-size: 10px;
+}
+.impact-list {
+  display: grid;
+  gap: 8px;
+}
+.impact-row {
+  display: grid;
+  grid-template-columns: minmax(62px, 1fr) auto 14px auto;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 6px;
+  background: hsl(var(--canvas) / .7);
+  padding: 9px;
+  font-size: 9px;
+}
+.impact-row div {
+  text-align: right;
+}
+.impact-row small,
+.impact-row strong {
+  display: block;
+}
+.impact-row small {
+  color: hsl(var(--muted-foreground));
+}
+.impact-row strong {
+  font-size: 10px;
+  font-weight: 600;
+}
+.tax-preview {
+  display: grid;
+  gap: 3px;
+  margin-top: 10px;
+  border-radius: 6px;
+  color: hsl(var(--success-ink));
+  background: hsl(var(--success) / .1);
+  padding: 10px;
+}
+.tax-preview.taxed {
+  color: hsl(var(--warning-ink));
+  background: hsl(var(--warning) / .12);
+}
+.tax-preview strong {
+  font-size: 11px;
+  font-weight: 600;
+}
+.tax-preview span,
+.empty-preview {
+  color: hsl(var(--muted-foreground));
+  font-size: 9px;
+}
+.reverse-context {
+  display: grid;
+  gap: 3px;
+  border: 1px solid hsl(var(--warning) / .25);
+  border-radius: 6px;
+  background: hsl(var(--warning) / .08);
+  padding: 11px;
+}
+.reverse-context strong {
+  font-size: 13px;
+  font-weight: 600;
+}
+.reverse-context span {
+  color: hsl(var(--muted-foreground));
+  font-size: 10px;
+}
+.compact-modal {
+  width: min(560px, 100%);
+}
+@media (max-width: 1180px) {
+  .month-picker {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  .partner-flow {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 860px) {
+  .month-control-head {
+    flex-direction: column;
+  }
+  .monthly-company-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .monthly-summary {
+    justify-content: flex-start;
+  }
+  .flow-metrics {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .movement-layout {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 640px) {
+  .month-control {
+    padding: 14px;
+  }
+  .month-picker {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .month-option {
+    min-height: 70px;
+  }
+  .form-grid.three {
+    grid-template-columns: 1fr;
+  }
+  .monthly-company-head {
+    padding: 12px;
+  }
+  .monthly-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: 100%;
+  }
+  .monthly-summary strong {
+    text-align: left;
+  }
+  .partner-flow {
+    padding: 14px 12px;
+  }
+  .partner-flow-identity {
+    grid-template-columns: 42px minmax(0, 1fr);
+  }
+  .partner-flow-identity .status {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+  .flow-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .flow-metrics .balance-metric {
+    grid-column: 1 / -1;
+  }
+}
+</style>
+</head>
+<body>
+  <div id="app"></div><div id="modal-root"></div><div id="toast-root" class="toast-root" aria-live="polite"></div>
+  <noscript><main class="noscript-card">Este MVP precisa de JavaScript habilitado.</main></noscript>
+  <script type="module">var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __commonJS = (cb, mod) => function __require() {
+  try {
+    return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+  } catch (e) {
+    throw mod = 0, e;
+  }
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
+
+// mvp/public-share/data.js
+var require_data = __commonJS({
+  "mvp/public-share/data.js"() {
+    window.MVP_DATA = Object.freeze({
+      payloadScope: "admin",
+      group: {
+        name: "Grupo Horizonte",
+        period: "Posição demonstrativa · agosto de 2026",
+        updatedAt: "01/09/2026 às 09:30"
+      },
+      companies: [
+        {
+          id: "aurora",
+          name: "Aurora Alimentos",
+          code: "EMP-001",
+          approved: 248e4,
+          distributed: 175e4,
+          shareholders: 3,
+          status: "in_progress",
+          allocations: [
+            { shareholderId: "ana", entitlement: 9e5, percentage: 36.29 },
+            { shareholderId: "caio", entitlement: 85e4, percentage: 34.27 },
+            { shareholderId: "lia", entitlement: 73e4, percentage: 29.44 }
+          ]
+        },
+        {
+          id: "iris",
+          name: "Íris Varejo",
+          code: "EMP-002",
+          approved: 162e4,
+          distributed: 117e4,
+          shareholders: 4,
+          status: "attention",
+          allocations: [
+            { shareholderId: "ana", entitlement: 6e5, percentage: 37.04 },
+            { shareholderId: "caio", entitlement: 45e4, percentage: 27.78 },
+            { shareholderId: "lia", entitlement: 32e4, percentage: 19.75 },
+            { shareholderId: "horizon", entitlement: 25e4, percentage: 15.43 }
+          ]
+        },
+        {
+          id: "vale",
+          name: "Vale Logística",
+          code: "EMP-003",
+          approved: 143e4,
+          distributed: 52e4,
+          shareholders: 3,
+          status: "in_progress",
+          allocations: [
+            { shareholderId: "ana", entitlement: 5e5, percentage: 34.97 },
+            { shareholderId: "caio", entitlement: 48e4, percentage: 33.57 },
+            { shareholderId: "lia", entitlement: 45e4, percentage: 31.46 }
+          ]
+        },
+        {
+          id: "holding",
+          name: "Horizonte Gestão Patrimonial",
+          code: "EMP-004",
+          approved: 95e4,
+          distributed: 455e3,
+          shareholders: 2,
+          status: "regular",
+          allocations: [
+            { shareholderId: "ana", entitlement: 25e4, percentage: 26.32 },
+            { shareholderId: "horizon", entitlement: 7e5, percentage: 73.68 }
+          ]
+        }
+      ],
+      shareholders: [
+        { id: "ana", name: "Ana Vale", initials: "AV", type: "PF", entitlement: 225e4, received: 117e4, status: "in_progress" },
+        { id: "caio", name: "Caio Serra", initials: "CS", type: "PF", entitlement: 178e4, received: 119e4, status: "attention" },
+        { id: "lia", name: "Lia Prado", initials: "LP", type: "PF", entitlement: 15e5, received: 112e4, status: "attention" },
+        { id: "horizon", name: "Horizonte Participações", initials: "HP", type: "PJ", entitlement: 95e4, received: 415e3, status: "regular" }
+      ],
+      months: [
+        { label: "Jan", value: 25e4 },
+        { label: "Fev", value: 38e4 },
+        { label: "Mar", value: 42e4 },
+        { label: "Abr", value: 56e4 },
+        { label: "Mai", value: 495e3 },
+        { label: "Jun", value: 47e4 },
+        { label: "Jul", value: 42e4 },
+        { label: "Ago", value: 25e4 },
+        { label: "Set", value: 65e4 }
+      ],
+      movements: [
+        { id: "mov-01", companyId: "aurora", shareholderId: "ana", date: "2026-01-15", amount: 25e4, eventType: "Pagamento", method: "PIX", legacy: true, status: "effective", revision: 1 },
+        { id: "mov-02", companyId: "aurora", shareholderId: "ana", date: "2026-02-10", amount: 29e4, eventType: "Pagamento", method: "TED", legacy: true, status: "effective", revision: 1 },
+        { id: "mov-03", companyId: "aurora", shareholderId: "caio", date: "2026-02-18", amount: 9e4, eventType: "Crédito", method: "Transferência interna", legacy: true, status: "effective", revision: 1 },
+        { id: "mov-04", companyId: "aurora", shareholderId: "caio", date: "2026-03-12", amount: 37e4, eventType: "Pagamento", method: "PIX", legacy: true, status: "effective", revision: 1 },
+        { id: "mov-05", companyId: "aurora", shareholderId: "lia", date: "2026-03-22", amount: 5e4, eventType: "Pagamento", method: "PIX", legacy: false, status: "effective", revision: 1 },
+        { id: "mov-06", companyId: "aurora", shareholderId: "lia", date: "2026-04-08", amount: 31e4, eventType: "Pagamento", method: "TED", legacy: true, status: "effective", revision: 1 },
+        { id: "mov-07", companyId: "iris", shareholderId: "ana", date: "2026-04-20", amount: 25e4, eventType: "Pagamento", method: "PIX", legacy: false, status: "effective", revision: 1 },
+        { id: "mov-08", companyId: "iris", shareholderId: "ana", date: "2026-05-06", amount: 13e4, eventType: "Pagamento", method: "PIX", legacy: false, status: "effective", revision: 1 },
+        { id: "mov-09", companyId: "iris", shareholderId: "caio", date: "2026-05-14", amount: 25e4, eventType: "Crédito", method: "Compensação", legacy: false, status: "effective", revision: 1 },
+        { id: "mov-10", companyId: "iris", shareholderId: "lia", date: "2026-05-27", amount: 115e3, eventType: "Pagamento", method: "TED", legacy: true, status: "effective", revision: 1 },
+        { id: "mov-11", companyId: "iris", shareholderId: "lia", date: "2026-06-05", amount: 135e3, eventType: "Pagamento", method: "PIX", legacy: false, status: "effective", revision: 1 },
+        { id: "mov-12", companyId: "iris", shareholderId: "horizon", date: "2026-06-10", amount: 3e4, eventType: "Crédito", method: "Transferência interna", legacy: false, status: "effective", revision: 1 },
+        { id: "mov-13", companyId: "vale", shareholderId: "ana", date: "2026-06-12", amount: 18e4, eventType: "Pagamento", method: "TED", legacy: false, status: "effective", revision: 1 },
+        { id: "mov-14", companyId: "vale", shareholderId: "caio", date: "2026-06-18", amount: 5e4, eventType: "Pagamento", method: "PIX", legacy: false, status: "effective", revision: 1 },
+        { id: "mov-15", companyId: "vale", shareholderId: "caio", date: "2026-06-25", amount: 75e3, eventType: "Pagamento", method: "PIX", legacy: false, status: "effective", revision: 1 },
+        { id: "mov-16", companyId: "vale", shareholderId: "caio", date: "2026-07-03", amount: 95e3, eventType: "Pagamento", method: "PIX", legacy: true, status: "effective", revision: 1 },
+        { id: "mov-17", companyId: "vale", shareholderId: "lia", date: "2026-07-09", amount: 12e4, eventType: "Entrega em bens", method: "Outro", legacy: false, status: "effective", revision: 1 },
+        { id: "mov-18", companyId: "holding", shareholderId: "ana", date: "2026-07-17", amount: 7e4, eventType: "Crédito", method: "Transferência interna", legacy: false, status: "effective", revision: 1 },
+        { id: "mov-19", companyId: "holding", shareholderId: "horizon", date: "2026-07-24", amount: 135e3, eventType: "Capitalização", method: "Capitalização", legacy: false, status: "effective", revision: 1 },
+        { id: "mov-20", companyId: "holding", shareholderId: "horizon", date: "2026-08-14", amount: 25e4, eventType: "Pagamento", method: "TED", legacy: false, status: "effective", revision: 1 },
+        { id: "mov-21", companyId: "aurora", shareholderId: "lia", date: "2026-09-01", amount: 39e4, eventType: "Pagamento", method: "PIX", legacy: true, status: "effective", revision: 1, note: "Exemplo demonstrativo de saldo negativo sem retenção." },
+        { id: "mov-22", companyId: "iris", shareholderId: "caio", date: "2026-09-01", amount: 26e4, eventType: "Pagamento", method: "TED", legacy: false, status: "effective", revision: 1, note: "Exemplo demonstrativo de saldo negativo com retenção." }
+      ],
+      rules: [
+        {
+          tone: "blue",
+          title: "Grupo sem compensação fiscal",
+          text: "O consolidado ajuda a leitura executiva, mas cada empresa mantém seu próprio saldo."
+        },
+        {
+          tone: "emerald",
+          title: "Direito individual preservado",
+          text: "Cada sócio visualiza somente o direito, o recebido e o saldo do recorte autorizado."
+        },
+        {
+          tone: "amber",
+          title: "Somente leitura",
+          text: "O acesso público não permite lançar, editar, estornar, exportar ou alterar rateios."
+        },
+        {
+          tone: "indigo",
+          title: "Privacidade por escopo",
+          text: "A visão exclusiva de sócios usa uma lista própria e não recebe dados de empresas."
+        },
+        {
+          tone: "rose",
+          title: "Excedente permanece visível",
+          text: "Saldo negativo exige confirmação e justificativa; ele gera alerta e nunca é compensado automaticamente."
+        },
+        {
+          tone: "blue",
+          title: "Histórico não é apagado",
+          text: "Correções criam revisão e o estorno preserva o movimento original na trilha de auditoria."
+        },
+        {
+          tone: "amber",
+          title: "Rateio precisa fechar 100%",
+          text: "Um cenário só vira posição oficial depois de conciliar o total e receber documento e justificativa."
+        },
+        {
+          tone: "indigo",
+          title: "Leitura tributária demonstrativa",
+          text: "A estimativa agrupa empresa, sócio e mês; a validação fiscal definitiva fica fora deste MVP."
+        }
+      ]
+    });
+  }
+});
+
+// mvp/public-share/empty-data.js
+var require_empty_data = __commonJS({
+  "mvp/public-share/empty-data.js"() {
+    window.MVP_DATA = Object.freeze({
+      payloadScope: "invalid",
+      group: { name: "Acesso indisponível", period: "", updatedAt: "" },
+      companies: [],
+      shareholders: [],
+      months: [],
+      rules: []
+    });
+  }
+});
+
+// mvp/public-share/shareholders-data.js
+var require_shareholders_data = __commonJS({
+  "mvp/public-share/shareholders-data.js"() {
+    window.MVP_DATA = Object.freeze({
+      payloadScope: "shareholders",
+      group: {
+        name: "Recorte privado",
+        period: "Posição demonstrativa · agosto de 2026",
+        updatedAt: "01/09/2026 às 09:30"
+      },
+      companies: [],
+      shareholders: [
+        { id: "ana", name: "Ana Vale", initials: "AV", type: "PF", entitlement: 225e4, received: 117e4, status: "in_progress" },
+        { id: "caio", name: "Caio Serra", initials: "CS", type: "PF", entitlement: 178e4, received: 119e4, status: "attention" },
+        { id: "lia", name: "Lia Prado", initials: "LP", type: "PF", entitlement: 15e5, received: 112e4, status: "attention" },
+        { id: "horizon", name: "Horizonte Participações", initials: "HP", type: "PJ", entitlement: 95e4, received: 415e3, status: "regular" }
+      ],
+      months: [
+        { label: "Jan", value: 25e4 },
+        { label: "Fev", value: 38e4 },
+        { label: "Mar", value: 42e4 },
+        { label: "Abr", value: 56e4 },
+        { label: "Mai", value: 495e3 },
+        { label: "Jun", value: 47e4 },
+        { label: "Jul", value: 42e4 },
+        { label: "Ago", value: 25e4 },
+        { label: "Set", value: 65e4 }
+      ],
+      rules: []
+    });
+  }
+});
+
+// mvp/public-share/ledger.js
+var require_ledger = __commonJS({
+  "mvp/public-share/ledger.js"() {
+    (() => {
+      "use strict";
+      const DATA = window.MVP_DATA;
+      const TAX_THRESHOLD = 5e4;
+      const TAX_RATE = 0.1;
+      const MONTHS = Object.freeze(["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]);
+      const effective = (movements) => movements.filter((movement) => movement.status === "effective");
+      const companyById = (id) => DATA.companies.find((company) => company.id === id);
+      const shareholderById = (id) => DATA.shareholders.find((shareholder) => shareholder.id === id);
+      const allocationFor = (company, shareholderId) => company?.allocations?.find((allocation) => allocation.shareholderId === shareholderId);
+      const sum = (items, selector) => items.reduce((total, item) => total + selector(item), 0);
+      const monthKey = (date) => String(date).slice(0, 7);
+      function taxEngine(movements) {
+        const sorted = effective(movements).slice().sort((a, b) => String(a.date).localeCompare(String(b.date)) || String(a.id).localeCompare(String(b.id)));
+        const details = /* @__PURE__ */ new Map();
+        const legacyUsed = /* @__PURE__ */ new Map();
+        const buckets = /* @__PURE__ */ new Map();
+        for (const movement of sorted) {
+          const company = companyById(movement.companyId);
+          const shareholder = shareholderById(movement.shareholderId);
+          const allocation = allocationFor(company, movement.shareholderId);
+          if (!company || !shareholder || !allocation) continue;
+          const rightKey = `${company.id}|${shareholder.id}`;
+          const used = legacyUsed.get(rightKey) ?? 0;
+          const legacy = movement.legacy ? Math.min(movement.amount, Math.max(0, allocation.entitlement - used)) : 0;
+          const taxable = Math.max(0, movement.amount - legacy);
+          legacyUsed.set(rightKey, used + legacy);
+          const bucketKey = `${company.id}|${shareholder.id}|${monthKey(movement.date)}`;
+          if (!buckets.has(bucketKey)) buckets.set(bucketKey, []);
+          const detail = { company, shareholder, legacy, taxable, irpf: 0, net: movement.amount };
+          buckets.get(bucketKey).push({ movement, detail });
+          details.set(movement.id, detail);
+        }
+        for (const items of buckets.values()) {
+          let cumulative = 0;
+          let retained = 0;
+          for (const item of items) {
+            cumulative += item.detail.taxable;
+            const required = item.detail.shareholder.type === "PF" && cumulative > TAX_THRESHOLD ? Math.round(cumulative * TAX_RATE) : 0;
+            item.detail.irpf = Math.max(0, required - retained);
+            item.detail.net = item.movement.amount - item.detail.irpf;
+            retained = required;
+          }
+          const monthTaxable = sum(items, (item) => item.detail.taxable);
+          const monthIrpf = items[0]?.detail.shareholder.type === "PF" && monthTaxable > TAX_THRESHOLD ? Math.round(monthTaxable * TAX_RATE) : 0;
+          for (const item of items) Object.assign(item.detail, { monthTaxable, monthIrpf, thresholdExceeded: monthTaxable > TAX_THRESHOLD });
+        }
+        return details;
+      }
+      function companyStats(movements) {
+        const active = effective(movements);
+        return DATA.companies.map((company) => {
+          const distributed = sum(active.filter((movement) => movement.companyId === company.id), (movement) => movement.amount);
+          return { ...company, distributed, balance: company.approved - distributed };
+        });
+      }
+      function shareholderStats(movements) {
+        const active = effective(movements);
+        return DATA.shareholders.map((shareholder) => {
+          const entitlement = sum(DATA.companies, (company) => allocationFor(company, shareholder.id)?.entitlement ?? 0);
+          const received = sum(active.filter((movement) => movement.shareholderId === shareholder.id), (movement) => movement.amount);
+          return { ...shareholder, entitlement, received, balance: entitlement - received };
+        });
+      }
+      function summary(movements) {
+        const companies = companyStats(movements);
+        const approved = sum(companies, (company) => company.approved);
+        const distributed = sum(companies, (company) => company.distributed);
+        const irpf = sum([...taxEngine(movements).values()], (detail) => detail.irpf);
+        return { approved, distributed, balance: approved - distributed, irpf, progress: approved ? distributed / approved * 100 : 0 };
+      }
+      function monthlyCompanies(movements, year = 2026) {
+        const details = taxEngine(movements);
+        const yearMovements = effective(movements).filter((movement) => String(movement.date).startsWith(`${year}-`));
+        return DATA.companies.map((company) => ({
+          company,
+          rows: company.allocations.map((allocation) => {
+            const shareholder = shareholderById(allocation.shareholderId);
+            let cumulative = 0;
+            const months = MONTHS.map((label, monthIndex) => {
+              const related = yearMovements.filter((movement) => movement.companyId === company.id && movement.shareholderId === shareholder.id && Number(String(movement.date).slice(5, 7)) === monthIndex + 1);
+              const gross = sum(related, (movement) => movement.amount);
+              cumulative += gross;
+              return {
+                label,
+                gross,
+                balance: allocation.entitlement - cumulative,
+                legacy: sum(related, (movement) => details.get(movement.id)?.legacy ?? 0),
+                taxable: sum(related, (movement) => details.get(movement.id)?.taxable ?? 0),
+                irpf: sum(related, (movement) => details.get(movement.id)?.irpf ?? 0),
+                net: sum(related, (movement) => details.get(movement.id)?.net ?? 0)
+              };
+            });
+            return { shareholder, entitlement: allocation.entitlement, percentage: allocation.percentage, months };
+          })
+        }));
+      }
+      function monthlyTotals(movements, year = 2026) {
+        const details = taxEngine(movements);
+        return MONTHS.map((label, monthIndex) => {
+          const prefix = `${year}-${String(monthIndex + 1).padStart(2, "0")}`;
+          const related = effective(movements).filter((movement) => String(movement.date).startsWith(prefix));
+          return { label, value: sum(related, (movement) => movement.amount), irpf: sum(related, (movement) => details.get(movement.id)?.irpf ?? 0) };
+        });
+      }
+      function preview(draft, movements, editId = "") {
+        const amount = parseMoney(draft.amount);
+        const company = companyById(draft.companyId);
+        const shareholder = shareholderById(draft.shareholderId);
+        if (!company || !shareholder || !allocationFor(company, shareholder.id) || amount <= 0 || !draft.date) return { amount, company, shareholder };
+        const base = movements.filter((movement) => movement.id !== editId);
+        const pseudo = { id: "__preview__", companyId: company.id, shareholderId: shareholder.id, date: draft.date, amount, legacy: draft.legacy, status: "effective" };
+        const after = [...base, pseudo];
+        const beforeCompany = companyStats(movements).find((item) => item.id === company.id);
+        const afterCompany = companyStats(after).find((item) => item.id === company.id);
+        const beforeShareholder = shareholderStats(movements).find((item) => item.id === shareholder.id);
+        const afterShareholder = shareholderStats(after).find((item) => item.id === shareholder.id);
+        const detail = taxEngine(after).get(pseudo.id);
+        return { amount, company, shareholder, beforeCompany, afterCompany, beforeShareholder, afterShareholder, detail, overdraw: afterCompany.balance < 0 || afterShareholder.balance < 0 };
+      }
+      function parseMoney(value) {
+        const normalized = String(value ?? "").trim().replace(/\s/g, "").replace(/R\$/i, "");
+        const decimal = normalized.includes(",") ? normalized.replace(/\./g, "").replace(",", ".") : normalized;
+        const amount = Number(decimal);
+        return Number.isFinite(amount) ? Math.round(amount * 100) / 100 : 0;
+      }
+      function shareholderSnapshot(movements) {
+        return {
+          shareholders: shareholderStats(movements).map(({ id, name, initials, type, entitlement, received, status }) => ({ id, name, initials, type, entitlement, received, status })),
+          months: monthlyTotals(movements).map(({ label, value, irpf }) => ({ label, value, irpf }))
+        };
+      }
+      window.MVP_LEDGER = Object.freeze({ TAX_THRESHOLD, TAX_RATE, MONTHS, taxEngine, companyStats, shareholderStats, summary, monthlyCompanies, monthlyTotals, preview, parseMoney, shareholderSnapshot });
+    })();
+  }
+});
+
+// mvp/public-share/operations.js
+var require_operations = __commonJS({
+  "mvp/public-share/operations.js"() {
+    (() => {
+      "use strict";
+      const DATA = window.MVP_DATA;
+      function validMovement2(movement) {
+        return movement && typeof movement.id === "string" && typeof movement.companyId === "string" && typeof movement.shareholderId === "string" && /^\d{4}-\d{2}-\d{2}$/.test(movement.date) && Number.isFinite(movement.amount) && movement.amount > 0 && ["effective", "reversed", "superseded"].includes(movement.status);
+      }
+      function loadMovements(initialRecord, token2, storageKey) {
+        const shared = initialRecord?.scope === "group" ? initialRecord.movements : null;
+        if (Array.isArray(shared) && shared.every(validMovement2)) return structuredClone(shared);
+        if (initialRecord?.scope === "group" && Array.isArray(DATA.movements)) return structuredClone(DATA.movements);
+        if (!token2 && Array.isArray(DATA.movements)) {
+          try {
+            const saved = JSON.parse(window.localStorage.getItem(storageKey) ?? "null");
+            if (Array.isArray(saved) && saved.every(validMovement2)) return saved;
+          } catch {
+            window.localStorage.removeItem(storageKey);
+          }
+          return structuredClone(DATA.movements);
+        }
+        return [];
+      }
+      function defaultDraft(existing) {
+        const company = DATA.companies.find((item) => item.id === existing?.companyId) ?? DATA.companies[0];
+        return {
+          companyId: company?.id ?? "",
+          shareholderId: existing?.shareholderId ?? company?.allocations?.[0]?.shareholderId ?? "",
+          amount: existing ? existing.amount.toLocaleString("pt-BR", { minimumFractionDigits: 2 }) : "",
+          date: existing?.date ?? "2026-09-01",
+          eventType: existing?.eventType ?? "Pagamento",
+          method: existing?.method ?? "PIX",
+          legacy: existing?.legacy ?? false,
+          note: existing?.note ?? "",
+          confirmOverdraw: false
+        };
+      }
+      function runSelfChecks(publicPolicy) {
+        const sum = (items, key) => items.reduce((total, item) => total + item[key], 0);
+        const companyApproved = sum(DATA.companies, "approved");
+        const companyDistributed = sum(DATA.companies, "distributed");
+        const shareholderEntitlement = sum(DATA.shareholders, "entitlement");
+        const shareholderReceived = sum(DATA.shareholders, "received");
+        const monthlyDistributed = sum(DATA.months, "value");
+        const bannedKeys = ["company", "companies", "companyId", "companyCount", "taxId", "document"];
+        const shareholdersAreScoped = DATA.shareholders.every((shareholder) => bannedKeys.every((key) => !(key in shareholder)));
+        const groupTabsMatch = publicPolicy("group").tabs.join("|") === "summary|companies|shareholders|monthly";
+        const isolatedPayload = DATA.payloadScope !== "shareholders" || DATA.companies.length === 0 && shareholderReceived === monthlyDistributed && shareholdersAreScoped;
+        const adminPayload = DATA.payloadScope !== "admin" || companyApproved === shareholderEntitlement && companyDistributed === shareholderReceived && companyDistributed === monthlyDistributed;
+        const invalidPayload = DATA.payloadScope !== "invalid" || DATA.companies.length === 0 && DATA.shareholders.length === 0;
+        return Object.freeze({ passed: groupTabsMatch && isolatedPayload && adminPayload && invalidPayload, payloadScope: DATA.payloadScope, groupTabsMatch, isolatedPayload, adminPayload, invalidPayload });
+      }
+      window.MVP_OPERATIONS = Object.freeze({ loadMovements, defaultDraft, runSelfChecks });
+    })();
+  }
+});
+
+// mvp/public-share/ui.js
+var require_ui = __commonJS({
+  "mvp/public-share/ui.js"() {
+    (() => {
+      "use strict";
+      const DATA = window.MVP_DATA;
+      const LEDGER = window.MVP_LEDGER;
+      const STATUS = Object.freeze({
+        regular: { label: "Regular", className: "regular" },
+        in_progress: { label: "Em andamento", className: "in_progress" },
+        attention: { label: "Atenção", className: "attention" }
+      });
+      const ICONS = Object.freeze({
+        layout: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+        building: '<path d="M3 21h18M6 21V7l6-4 6 4v14M9 10h1M14 10h1M9 14h1M14 14h1M10 21v-3h4v3"/>',
+        users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/>',
+        movement: '<path d="M7 7h11l-3-3M17 17H6l3 3M18 7l-3 3M6 17l3-3"/>',
+        file: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8M8 17h8"/>',
+        moon: '<path d="M12 3a9 9 0 1 0 9 9c0-.5 0-1-.1-1.5A6.5 6.5 0 0 1 13.5 3H12Z"/>',
+        sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+        share: '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-4M8.6 13.5l6.8 4"/>',
+        lock: '<rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
+        shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/>',
+        check: '<path d="m20 6-11 11-5-5"/>',
+        x: '<path d="m18 6-12 12M6 6l12 12"/>',
+        copy: '<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
+        external: '<path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
+        chart: '<path d="M3 3v18h18M7 16l4-5 4 3 5-7"/>',
+        key: '<circle cx="8" cy="15" r="4"/><path d="m11 12 8-8M17 6l2 2M14 9l2 2"/>',
+        info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/>',
+        logout: '<path d="M10 17l5-5-5-5M15 12H3M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>',
+        menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
+        plus: '<path d="M12 5v14M5 12h14"/>',
+        edit: '<path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/>',
+        reverse: '<path d="M9 14 4 9l5-5M4 9h10a6 6 0 0 1 6 6v2"/>'
+      });
+      function escapeHtml(value = "") {
+        return String(value).replace(/[&<>'"]/g, (character) => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          "'": "&#39;",
+          '"': "&quot;"
+        })[character]);
+      }
+      function icon(name) {
+        return `<svg class="icon" aria-hidden="true" viewBox="0 0 24 24">${ICONS[name] ?? ICONS.info}</svg>`;
+      }
+      function currency(value) {
+        return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);
+      }
+      function compactCurrency(value) {
+        if (Math.abs(value) >= 1e6) return `R$ ${(value / 1e6).toLocaleString("pt-BR", { maximumFractionDigits: 2 })} mi`;
+        if (Math.abs(value) >= 1e3) return `R$ ${(value / 1e3).toLocaleString("pt-BR", { maximumFractionDigits: 0 })} mil`;
+        return currency(value);
+      }
+      function percentage(value) {
+        return `${value.toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%`;
+      }
+      function percentageFromAta(value) {
+        return `${value.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`;
+      }
+      function shareholderSource(state) {
+        return state?.shareholderSnapshot?.shareholders ?? DATA.shareholders;
+      }
+      function totals(scope = "group", state) {
+        if (scope === "group" && DATA.companies.length) return LEDGER.summary(state.movements);
+        const shareholders = shareholderSource(state);
+        const approved = scope === "shareholders" ? shareholders.reduce((total, shareholder) => total + shareholder.entitlement, 0) : DATA.companies.reduce((total, company) => total + company.approved, 0);
+        const distributed = scope === "shareholders" ? shareholders.reduce((total, shareholder) => total + shareholder.received, 0) : DATA.companies.reduce((total, company) => total + company.distributed, 0);
+        return { approved, distributed, balance: approved - distributed, progress: distributed / approved * 100 };
+      }
+      function statCard(label, value, subtitle, tone) {
+        return `<article class="stat-card ${tone}"><div class="stat-label"><span class="stat-dot"></span><span>${escapeHtml(label)}</span></div><div class="stat-value" title="${escapeHtml(value)}">${escapeHtml(value)}</div><div class="stat-subtitle">${escapeHtml(subtitle)}</div></article>`;
+      }
+      function statusBadge(status) {
+        const config = STATUS[status] ?? STATUS.regular;
+        return `<span class="status ${config.className}">${config.label}</span>`;
+      }
+      function progress(value) {
+        const safe = Math.max(0, Math.min(100, value));
+        return `<div class="entity-progress"><div class="progress-track" role="progressbar" aria-label="Percentual distribuído" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(safe)}"><div class="progress-fill" style="width:${safe}%"></div></div><div class="entity-progress-copy"><span>${percentage(value)} distribuído</span><span>${percentage(100 - value)} disponível</span></div></div>`;
+      }
+      function tabs(items, active, action) {
+        const prefix = action === "admin-tab" ? "admin" : "public";
+        return `<div class="tabs" role="tablist" aria-label="Seções da visualização">${items.map((item) => `<button class="tab ${active === item.id ? "active" : ""}" id="${prefix}-tab-${item.id}" type="button" role="tab" aria-controls="${prefix}-panel-${item.id}" aria-selected="${active === item.id}" tabindex="${active === item.id ? "0" : "-1"}" data-action="${action}" data-tab="${item.id}">${escapeHtml(item.label)}${item.count === void 0 ? "" : `<span class="tab-count">${item.count}</span>`}</button>`).join("")}</div>`;
+      }
+      function companyCards(state) {
+        return `<div class="entity-grid">${LEDGER.companyStats(state.movements).map((company) => {
+          const balance = company.balance;
+          const share = company.distributed / company.approved * 100;
+          return `<article class="entity-card"><div class="entity-top"><div class="entity-identity"><div class="entity-mark">${icon("building")}</div><div class="entity-copy"><div class="entity-name">${escapeHtml(company.name)}</div><div class="entity-meta">${escapeHtml(company.code)} · saldo apurado isoladamente</div></div></div>${statusBadge(company.status)}</div><div class="metric-grid"><div class="metric"><span>Em ata</span><strong>${compactCurrency(company.approved)}</strong></div><div class="metric"><span>Distribuído</span><strong>${compactCurrency(company.distributed)}</strong></div><div class="metric"><span>Saldo</span><strong>${compactCurrency(balance)}</strong></div></div>${progress(share)}</article>`;
+        }).join("")}</div>`;
+      }
+      function shareholderCards(state) {
+        const shareholders = state.shareScope === "shareholders" ? shareholderSource(state) : LEDGER.shareholderStats(state.movements);
+        return `<div class="entity-grid">${shareholders.map((shareholder) => {
+          const balance = shareholder.entitlement - shareholder.received;
+          const share = shareholder.received / shareholder.entitlement * 100;
+          return `<article class="entity-card"><div class="entity-top"><div class="entity-identity"><div class="avatar indigo">${escapeHtml(shareholder.initials)}</div><div class="entity-copy"><div class="entity-name">${escapeHtml(shareholder.name)}</div><div class="entity-meta">${escapeHtml(shareholder.type)} · posição individual autorizada</div></div></div>${statusBadge(shareholder.status)}</div><div class="metric-grid"><div class="metric"><span>Direito</span><strong>${compactCurrency(shareholder.entitlement)}</strong></div><div class="metric"><span>Recebido</span><strong>${compactCurrency(shareholder.received)}</strong></div><div class="metric"><span>Saldo</span><strong>${compactCurrency(balance)}</strong></div></div>${progress(share)}</article>`;
+        }).join("")}</div>`;
+      }
+      function ruleList(limit = DATA.rules.length) {
+        const toneIcon = { blue: "shield", emerald: "check", amber: "lock", indigo: "users", rose: "info" };
+        return `<div class="rule-list">${DATA.rules.slice(0, limit).map((rule) => `<article class="rule-item"><div class="rule-icon ${rule.tone}">${icon(toneIcon[rule.tone])}</div><div><strong>${escapeHtml(rule.title)}</strong><p>${escapeHtml(rule.text)}</p></div></article>`).join("")}</div>`;
+      }
+      function distributionPanel(state) {
+        const summary = totals("group", state);
+        return `<section class="section-card"><div class="section-head"><div><h2>Distribuição por empresa</h2><p>Consolidado visual, mantendo os saldos independentes</p></div><span class="status in_progress">${percentage(summary.progress)}</span></div><div class="section-body"><div class="total-progress"><div class="progress-copy"><span>Progresso do grupo</span><strong>${compactCurrency(summary.distributed)}</strong></div><div class="progress-track" role="progressbar" aria-label="Progresso total" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(summary.progress)}"><div class="progress-fill" style="width:${Math.min(summary.progress, 100)}%"></div></div></div><div class="company-bars">${LEDGER.companyStats(state.movements).map((company) => {
+          const value = company.distributed / company.approved * 100;
+          return `<div><div class="company-bar-label"><span>${escapeHtml(company.name)}</span><span>${percentage(value)}</span></div><div class="progress-track"><div class="progress-fill" style="width:${Math.min(value, 100)}%"></div></div></div>`;
+        }).join("")}</div></div></section>`;
+      }
+      function overviewContent(state) {
+        return `<div class="overview-grid">${distributionPanel(state)}<section class="section-card"><div class="section-head"><div><h2>Leitura executiva</h2><p>Regras que evitam uma interpretação incorreta</p></div></div><div class="section-body">${ruleList(3)}</div></section></div>`;
+      }
+      function shareholderMonthly(state) {
+        const months = state.shareholderSnapshot?.months ?? DATA.months;
+        const max = Math.max(...months.map((month) => month.value));
+        return `<section class="section-card"><div class="section-head"><div><h2>Recebimentos mensais</h2><p>Agregado exclusivo dos sócios autorizados</p></div><span class="status regular">${months.length} meses</span></div><div class="section-body"><div class="chart-summary"><span>Total no período <strong>${compactCurrency(totals("shareholders", state).distributed)}</strong></span><span>Maior mês <strong>${compactCurrency(max)}</strong></span></div><div class="bar-chart" role="img" aria-label="Gráfico dos recebimentos mensais">${months.map((month) => `<div class="bar-column" title="${escapeHtml(month.label)}: ${currency(month.value)}"><div class="bar-shell"><div class="bar-fill" style="height:${max ? month.value / max * 100 : 0}%"></div></div><div class="bar-label">${escapeHtml(month.label)}</div></div>`).join("")}</div></div></section>`;
+      }
+      function monthlyContent(scope, state) {
+        if (scope === "shareholders") return shareholderMonthly(state);
+        const monthIndex = Number.isInteger(state.monthlyMonth) ? state.monthlyMonth : 8;
+        const monthName = new Intl.DateTimeFormat("pt-BR", { month: "long" }).format(new Date(2026, monthIndex, 1));
+        const companies = LEDGER.monthlyCompanies(state.movements);
+        const monthTotals = LEDGER.monthlyTotals(state.movements);
+        const selectedRows = companies.flatMap(({ rows }) => rows.map((row) => row.months[monthIndex]));
+        const monthGross = selectedRows.reduce((total, month) => total + month.gross, 0);
+        const monthIrrf = selectedRows.reduce((total, month) => total + month.irpf, 0);
+        const negativeCount = selectedRows.filter((month) => month.balance < 0).length;
+        const activeCompanies = companies.filter(({ rows }) => rows.some((row) => row.months[monthIndex].gross > 0)).length;
+        const monthPicker = `<div class="month-picker" role="group" aria-label="Competência de 2026">${LEDGER.MONTHS.map((label, index) => {
+          const risks = companies.flatMap(({ rows }) => rows).filter((row) => row.months[index].balance < 0).length;
+          return `<button class="month-option ${index === monthIndex ? "active" : ""} ${risks ? "has-risk" : ""}" data-action="select-month" data-month="${index}" type="button" aria-pressed="${index === monthIndex}"><span>${label}</span><strong>${monthTotals[index].value ? compactCurrency(monthTotals[index].value) : "Sem movimento"}</strong>${risks ? `<em>${risks} alerta${risks > 1 ? "s" : ""}</em>` : ""}</button>`;
+        }).join("")}</div>`;
+        const cards = companies.map(({ company, rows }) => {
+          const selected = rows.map((row) => ({ ...row, month: row.months[monthIndex] }));
+          const companyGross = selected.reduce((total, row) => total + row.month.gross, 0);
+          const companyIrrf = selected.reduce((total, row) => total + row.month.irpf, 0);
+          const companyBalance = selected.reduce((total, row) => total + row.month.balance, 0);
+          const companyRisks = selected.filter((row) => row.month.balance < 0).length;
+          const partners = selected.map(({ shareholder, entitlement, percentage: percentageInAta, month }) => {
+            const risk = month.balance < 0;
+            const status = risk && month.irpf ? "Saldo negativo + IRRF" : risk ? "Saldo negativo" : month.irpf ? "Com IRRF" : month.gross ? "Regular" : "Sem movimento";
+            return `<article class="partner-flow ${risk ? "negative" : ""} ${month.irpf ? "taxed" : ""}"><div class="partner-flow-identity"><div class="avatar indigo">${escapeHtml(shareholder.initials)}</div><div><h4>${escapeHtml(shareholder.name)}</h4><p><strong>${currency(entitlement)}</strong> de direito · <strong>${percentageFromAta(percentageInAta)}</strong> disponível na ata</p></div><span class="status ${risk || month.irpf ? "attention" : "regular"}">${status}</span></div><div class="flow-metrics"><div><span>Bruto no mês</span><strong>${currency(month.gross)}</strong></div><div><span>Base tributável</span><strong>${currency(month.taxable)}</strong></div><div><span>IRRF estimado</span><strong>${currency(month.irpf)}</strong></div><div><span>Líquido</span><strong>${currency(month.net)}</strong></div><div class="balance-metric"><span>Saldo após ${escapeHtml(LEDGER.MONTHS[monthIndex])}</span><strong class="${risk ? "negative-text" : "positive-text"}">${currency(month.balance)}</strong></div></div></article>`;
+          }).join("");
+          return `<section class="monthly-company-card"><div class="monthly-company-head"><div><span class="company-kicker">${escapeHtml(company.code)} · fonte pagadora</span><h3>${escapeHtml(company.name)}</h3></div><div class="monthly-summary"><span>Movimento do mês <strong>${currency(companyGross)}</strong></span><span>IRRF <strong>${currency(companyIrrf)}</strong></span><span>Saldo da ata <strong class="${companyBalance < 0 ? "negative-text" : "positive-text"}">${currency(companyBalance)}</strong></span><span>Posições negativas <strong class="${companyRisks ? "negative-text" : "positive-text"}">${companyRisks}</strong></span></div></div><div class="partner-flow-list">${partners}</div></section>`;
+        }).join("");
+        return `<div class="monthly-stack"><section class="month-control"><div class="month-control-head"><div><span class="company-kicker">Acompanhamento anual · 2026</span><h2>Competência: <strong>${escapeHtml(monthName)}</strong></h2><p>Selecione um mês para comparar empresas, direitos e retenções sem tabelas ou rolagem lateral.</p></div><span class="status ${negativeCount ? "attention" : "regular"}">${negativeCount ? `${negativeCount} posição(ões) negativa(s)` : "Sem saldos negativos"}</span></div>${monthPicker}</section><div class="stats-grid stats-4">${statCard(`Distribuído em ${monthName}`, currency(monthGross), `${activeCompanies} empresa(s) com movimento`, "blue")}${statCard("IRRF estimado", currency(monthIrrf), "Retenção da competência", monthIrrf ? "rose" : "emerald")}${statCard("Saldos negativos", String(negativeCount), "Após os movimentos do mês", negativeCount ? "amber" : "emerald")}${statCard("Empresas ativas", `${activeCompanies}/${DATA.companies.length}`, "Na competência selecionada", "indigo")}</div><div class="tax-rule-note">${icon("info")}<span><strong>Leitura tributária:</strong> empresa + sócio PF + mês. Acima de R$ 50 mil, o IRRF estimado é 10% sobre o total tributável; exatamente R$ 50 mil não aciona retenção. A parcela válida de ata/2025 é separada antes do cálculo.</span></div><div class="monthly-company-grid">${cards}</div></div>`;
+      }
+      function rulesContent() {
+        const rows = [
+          ["Resumo consolidado do grupo", "yes", "no"],
+          ["Empresas e posição por empresa", "yes", "no"],
+          ["Direito, recebido e saldo dos sócios", "yes", "yes"],
+          ["Documentos, contatos e dados bancários", "no", "no"],
+          ["Ações de edição, estorno e exportação", "no", "no"]
+        ];
+        const cell = (value) => value === "yes" ? '<span class="yes">Exibe</span>' : '<span class="no">Não envia</span>';
+        return `<div class="overview-grid"><section class="section-card"><div class="section-head"><div><h2>Regras de cálculo e leitura</h2><p>Mescla das ideias do arquivo com as regras atuais</p></div></div><div class="section-body">${ruleList()}</div></section><section class="section-card"><div class="section-head"><div><h2>Matriz do acesso público</h2><p>Allowlist diferente para cada tipo de link</p></div></div><div class="visibility-wrap"><table class="visibility-table"><thead><tr><th>Conteúdo</th><th>Grupo</th><th>Somente sócios</th></tr></thead><tbody>${rows.map((row) => `<tr><td>${row[0]}</td><td>${cell(row[1])}</td><td>${cell(row[2])}</td></tr>`).join("")}</tbody></table></div></section></div>`;
+      }
+      function statsMarkup(scope, state) {
+        const summary = totals(scope, state);
+        const base = [
+          statCard(scope === "group" ? "Lucros em atas" : "Direito autorizado", compactCurrency(summary.approved), "Base fictícia do recorte", "blue"),
+          statCard("Distribuído", compactCurrency(summary.distributed), `${percentage(summary.progress)} do total`, "emerald"),
+          statCard("Saldo", compactCurrency(summary.balance), "Disponível no recorte", "amber")
+        ];
+        if (scope === "group") {
+          base.push(statCard("Empresas", String(DATA.companies.length), "Saldos independentes", "indigo"));
+          base.push(statCard("IRRF estimado", compactCurrency(summary.irpf), "IRPF retido mensalmente", "rose"));
+        } else {
+          base.push(statCard("Sócios", String(DATA.shareholders.length), "Nenhuma empresa é enviada", "indigo"));
+        }
+        return `<div class="stats-grid stats-${base.length}">${base.join("")}</div>`;
+      }
+      function movementContent(state) {
+        const tax = LEDGER.taxEngine(state.movements);
+        const rows = state.movements.slice().sort((a, b) => String(b.date).localeCompare(String(a.date))).map((movement) => {
+          const company = DATA.companies.find((item) => item.id === movement.companyId);
+          const shareholder = DATA.shareholders.find((item) => item.id === movement.shareholderId);
+          const detail = tax.get(movement.id);
+          const active = movement.status === "effective";
+          const status = movement.status === "reversed" ? "Estornado" : movement.status === "superseded" ? "Substituído" : detail?.irpf ? "Com IRRF" : detail?.legacy === movement.amount ? "Ata/25" : "Efetivo";
+          return `<tr class="${active ? "" : "inactive-row"}"><td>${escapeHtml((/* @__PURE__ */ new Date(`${movement.date}T12:00:00`)).toLocaleDateString("pt-BR"))}</td><td><strong>${escapeHtml(company?.name ?? "Empresa removida")}</strong><span>${escapeHtml(company?.code ?? "")}</span></td><td><strong>${escapeHtml(shareholder?.name ?? "Sócio removido")}</strong><span>${escapeHtml(shareholder?.type ?? "")}</span></td><td>${compactCurrency(movement.amount)}</td><td>${compactCurrency(detail?.irpf ?? 0)}</td><td>${compactCurrency(detail?.net ?? movement.amount)}</td><td><span class="status ${active ? detail?.irpf ? "attention" : "regular" : ""}">${status}</span></td><td><div class="row-actions">${active ? `<button class="icon-button small" data-action="edit-movement" data-id="${escapeHtml(movement.id)}" type="button" aria-label="Editar lançamento">${icon("edit")}</button><button class="icon-button small" data-action="open-reverse" data-id="${escapeHtml(movement.id)}" type="button" aria-label="Estornar lançamento">${icon("reverse")}</button>` : ""}</div></td></tr>`;
+        }).join("");
+        return `<section class="section-card"><div class="section-head"><div><h2>Livro de movimentações</h2><p>Edições criam nova versão; estornos preservam o evento original</p></div><button class="button primary" data-action="open-movement" type="button">${icon("plus")}Novo lançamento</button></div><div class="ledger-scroll"><table class="ledger-table"><thead><tr><th>Data</th><th>Empresa</th><th>Sócio</th><th>Bruto</th><th>IRRF</th><th>Líquido</th><th>Status</th><th>Ações</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
+      }
+      function adminTabContent(activeTab, state) {
+        if (activeTab === "companies") return `<section class="section-card"><div class="section-head"><div><h2>Empresas do grupo</h2><p>Cada fonte pagadora preserva o próprio saldo</p></div></div><div class="section-body">${companyCards(state)}</div></section>`;
+        if (activeTab === "shareholders") return `<section class="section-card"><div class="section-head"><div><h2>Posição dos sócios</h2><p>Direitos consolidados apenas dentro do escopo autorizado</p></div></div><div class="section-body">${shareholderCards(state)}</div></section>`;
+        if (activeTab === "monthly") return monthlyContent("group", state);
+        if (activeTab === "movements") return movementContent(state);
+        if (activeTab === "rules") return rulesContent();
+        return overviewContent(state);
+      }
+      function sidebar() {
+        const links = [["layout", "Central"], ["building", "Empresas"], ["users", "Sócios"], ["movement", "Movimentações"], ["file", "Relatório"]];
+        return `<aside class="sidebar"><div class="sidebar-logo"><span class="logo-mark">P</span><span class="logo-copy"><strong>Grupo Pomin</strong><span>Distribuição de lucros</span></span></div><nav class="side-nav" aria-label="Navegação principal">${links.map(([glyph, label], index) => `<button class="side-link ${index === 0 ? "active" : ""}" data-action="nav-placeholder" type="button" aria-current="${index === 0 ? "page" : "false"}">${icon(glyph)}<span class="side-label">${label}</span></button>`).join("")}</nav><div class="sidebar-foot">MVP isolado · dados sintéticos</div></aside>`;
+      }
+      function mobileMenu(state) {
+        if (!state.mobileMenuOpen) return "";
+        const links = [["layout", "Central"], ["building", "Empresas"], ["users", "Sócios"], ["movement", "Movimentações"], ["file", "Relatório"]];
+        return `<div class="mobile-overlay" data-action="close-mobile-overlay"><aside class="mobile-drawer" role="dialog" aria-modal="true" aria-label="Menu principal"><div class="mobile-drawer-head"><div class="sidebar-logo"><span class="logo-mark">P</span><span class="mobile-logo-copy"><strong>Grupo Pomin</strong><span>Distribuição de lucros</span></span></div><button class="icon-button" data-action="close-mobile-menu" type="button" aria-label="Fechar menu">${icon("x")}</button></div><nav class="mobile-nav" aria-label="Navegação principal">${links.map(([glyph, label], index) => `<button class="side-link ${index === 0 ? "active" : ""}" data-action="nav-placeholder" type="button">${icon(glyph)}<span>${label}</span></button>`).join("")}</nav><div class="mobile-drawer-foot">MVP isolado · dados sintéticos</div></aside></div>`;
+      }
+      function themeButton(theme) {
+        const dark = theme === "dark";
+        return `<button class="icon-button" data-action="theme" type="button" aria-label="${dark ? "Ativar tema claro" : "Ativar tema escuro"}" title="${dark ? "Tema claro" : "Tema escuro"}">${icon(dark ? "sun" : "moon")}</button>`;
+      }
+      function renderAdmin(state) {
+        const adminTabs = [
+          { id: "overview", label: "Visão geral" },
+          { id: "companies", label: "Empresas", count: DATA.companies.length },
+          { id: "shareholders", label: "Sócios", count: DATA.shareholders.length },
+          { id: "monthly", label: "Fluxo mensal" },
+          { id: "movements", label: "Lançamentos", count: state.movements.filter((movement) => movement.status === "effective").length },
+          { id: "rules", label: "Regras & acesso" }
+        ];
+        return `<div class="app-shell">${sidebar()}<div class="main-column"><header class="top-header"><button class="icon-button mobile-menu-button" data-action="open-mobile-menu" type="button" aria-label="Abrir menu">${icon("menu")}</button><div class="breadcrumb">Distribuição / <strong>${escapeHtml(DATA.group.name)}</strong></div><div class="header-actions"><span class="demo-chip">Dados demonstrativos</span>${themeButton(state.theme)}</div></header><main class="canvas"><div class="page-stack"><header class="page-header"><div class="page-heading"><div class="eyebrow"><span class="eyebrow-dot"></span>Visão consolidada</div><h1 class="page-title">${escapeHtml(DATA.group.name)}</h1><p class="page-subtitle">Grupo, empresas e sócios organizados em abas, com cálculo mensal por fonte pagadora e beneficiário.</p></div><div class="page-actions"><button class="button" data-action="open-share" type="button">${icon("share")}Compartilhar visão</button><button class="button primary" data-action="open-movement" type="button">${icon("plus")}Novo lançamento</button></div></header><div class="mvp-note">${icon("info")}<span><strong>MVP funcional:</strong> lançamentos, edições e estornos ficam apenas neste navegador. Nenhum dado do arquivo original foi incluído.</span></div>${statsMarkup("group", state)}${tabs(adminTabs, state.adminTab, "admin-tab")}<div class="tab-panel" id="admin-panel-${state.adminTab}" role="tabpanel" aria-labelledby="admin-tab-${state.adminTab}">${adminTabContent(state.adminTab, state)}</div></div></main></div>${mobileMenu(state)}</div>`;
+      }
+      function publicGroupContent(activeTab, state) {
+        if (activeTab === "companies") return `<section class="section-card"><div class="section-head"><div><h2>Empresas incluídas</h2><p>Documentos e informações internas permanecem ocultos</p></div></div><div class="section-body">${companyCards(state)}</div></section>`;
+        if (activeTab === "shareholders") return `<section class="section-card"><div class="section-head"><div><h2>Sócios incluídos</h2><p>Somente valores autorizados para este compartilhamento</p></div></div><div class="section-body">${shareholderCards(state)}</div></section>`;
+        if (activeTab === "monthly") return monthlyContent("group", state);
+        return overviewContent(state);
+      }
+      function publicHeader(state, scopeLabel) {
+        return `<header class="public-header"><div class="public-brand"><span class="logo-mark">P</span><span class="public-brand-copy"><strong>Grupo Pomin</strong><span>Posição compartilhada</span></span></div><div class="header-actions"><span class="scope-chip">${escapeHtml(scopeLabel)}</span>${themeButton(state.theme)}<button class="icon-button" data-action="sign-out" type="button" aria-label="Sair da visualização" title="Sair">${icon("logout")}</button></div></header>`;
+      }
+      function renderPublic(state) {
+        const shareholdersOnly = state.shareScope === "shareholders";
+        const scopeLabel = shareholdersOnly ? "Somente sócios" : "Grupo completo";
+        const groupTabs = [{ id: "summary", label: "Resumo" }, { id: "companies", label: "Empresas", count: DATA.companies.length }, { id: "shareholders", label: "Sócios", count: DATA.shareholders.length }, { id: "monthly", label: "Fluxo mensal" }];
+        const content = shareholdersOnly ? `<div class="mvp-note">${icon("shield")}<span><strong>Privacidade por escopo:</strong> este payload contém somente os sócios autorizados e seus agregados mensais.</span></div><section class="section-card"><div class="section-head"><div><h2>Posição individual dos sócios</h2><p>Direito, recebido e saldo do recorte autorizado</p></div><span class="status regular">Somente leitura</span></div><div class="section-body">${shareholderCards(state)}</div></section>${monthlyContent("shareholders", state)}` : `${tabs(groupTabs, state.publicTab, "public-tab")}<div class="tab-panel" id="public-panel-${state.publicTab}" role="tabpanel" aria-labelledby="public-tab-${state.publicTab}">${publicGroupContent(state.publicTab, state)}</div>`;
+        return `<div class="public-shell">${publicHeader(state, scopeLabel)}<div class="readonly-strip">${icon("lock")}MVP — acesso simulado · somente leitura · validade local de ${state.expiryDays} dias</div><main class="public-main"><div class="page-stack"><header class="page-header"><div class="page-heading"><div class="eyebrow"><span class="eyebrow-dot"></span>${shareholdersOnly ? "Recorte privado" : "Grupo empresarial"}</div><h1 class="page-title">${shareholdersOnly ? "Posição dos sócios" : escapeHtml(DATA.group.name)}</h1><p class="page-subtitle">${shareholdersOnly ? "Visualização exclusiva dos beneficiários autorizados, sem referências empresariais." : "Visão conjunta do grupo, com empresas, sócios e fluxo tributário separados em abas."}</p><div class="public-meta"><span>${icon("shield")}Documentos não incluídos</span><span>${icon("chart")}Atualizado em ${escapeHtml(DATA.group.updatedAt)}</span></div></div></header>${statsMarkup(shareholdersOnly ? "shareholders" : "group", state)}${content}</div></main></div>`;
+      }
+      function renderLock(state) {
+        const label = state.shareScope === "shareholders" ? "Somente sócios" : `Grupo completo · ${DATA.group.name}`;
+        if (state.invalidShare) return `<main class="lock-screen"><section class="lock-card"><div class="lock-mark">${icon("lock")}</div><h1>Acesso indisponível</h1><p>Este token não existe neste navegador ou os dados locais do MVP foram removidos.</p><button class="button full back-button" data-action="back-admin" type="button">Voltar ao painel MVP</button></section></main>`;
+        if (state.expired) return `<main class="lock-screen"><section class="lock-card"><div class="lock-mark">${icon("lock")}</div><h1>Acesso expirado</h1><p>A validade local deste link demonstrativo terminou.</p><button class="button full back-button" data-action="back-admin" type="button">Voltar ao painel MVP</button></section></main>`;
+        if (state.revoked) return `<main class="lock-screen"><section class="lock-card"><div class="lock-mark">${icon("lock")}</div><h1>Acesso revogado</h1><p>Este link demonstrativo foi marcado como revogado.</p><button class="button full back-button" data-action="back-admin" type="button">Voltar ao painel MVP</button></section></main>`;
+        return `<main class="lock-screen"><form class="lock-card" id="unlock-form"><div class="lock-mark">${icon("lock")}</div><h1>Posição compartilhada</h1><p>Digite a senha para abrir este recorte em modo somente leitura.</p><div class="lock-context"><span>Escopo autorizado</span><strong>${escapeHtml(label)}</strong></div><div class="field"><label for="unlock-password">Senha de acesso</label><input class="input" id="unlock-password" name="password" type="password" autocomplete="current-password" autofocus required /><small>Use a senha definida ao gerar o link. No exemplo inicial: <strong>cliente2026</strong>.</small></div><div class="lock-error" role="alert">${escapeHtml(state.unlockError)}</div><button class="button primary full" type="submit">${icon("key")}Acessar visualização</button><button class="button ghost full back-button" data-action="back-admin" type="button">Voltar ao painel MVP</button></form></main>`;
+      }
+      function impactRow(label, before, after) {
+        return `<div class="impact-row"><span>${escapeHtml(label)}</span><div><small>Antes</small><strong>${compactCurrency(before)}</strong></div><span>→</span><div><small>Depois</small><strong class="${after < 0 ? "negative-text" : "positive-text"}">${compactCurrency(after)}</strong></div></div>`;
+      }
+      function movementModal(state) {
+        const draft = state.movementDraft;
+        const company = DATA.companies.find((item) => item.id === draft.companyId) ?? DATA.companies[0];
+        const shareholders = company.allocations.map((allocation) => DATA.shareholders.find((item) => item.id === allocation.shareholderId));
+        const projection = LEDGER.preview(draft, state.movements, state.editingMovementId);
+        const detail = projection.detail;
+        const impact = projection.afterCompany ? `<div class="impact-list">${impactRow("Empresa", projection.beforeCompany.balance, projection.afterCompany.balance)}${impactRow("Sócio", projection.beforeShareholder.balance, projection.afterShareholder.balance)}</div><div class="tax-preview ${detail.irpf ? "taxed" : ""}"><strong>${detail.irpf ? `IRRF incremental estimado: ${currency(detail.irpf)}` : "Sem IRRF incremental neste lançamento"}</strong><span>Bruto ${currency(projection.amount)} · ata/2025 ${currency(detail.legacy)} · base tributável ${currency(detail.taxable)} · líquido ${currency(detail.net)}</span></div>` : `<div class="empty-preview">Informe empresa, sócio, data e valor para visualizar o impacto.</div>`;
+        return `<div class="overlay" data-action="close-movement-overlay"><section class="modal movement-modal" role="dialog" aria-modal="true" aria-labelledby="movement-title"><div class="modal-header"><div><h2 id="movement-title">${state.editingMovementId ? "Editar lançamento" : "Novo lançamento"}</h2><p>O saldo e o IRRF são recalculados antes de salvar.</p></div><button class="icon-button" data-action="close-movement" type="button" aria-label="Fechar">${icon("x")}</button></div><form id="movement-form"><div class="modal-body movement-layout"><div class="movement-fields"><div class="form-grid"><div class="field"><label for="movement-company">Empresa / fonte pagadora</label><select class="select" id="movement-company">${DATA.companies.map((item) => `<option value="${item.id}" ${item.id === company.id ? "selected" : ""}>${escapeHtml(item.name)}</option>`).join("")}</select></div><div class="field"><label for="movement-shareholder">Sócio favorecido</label><select class="select" id="movement-shareholder">${shareholders.map((item) => `<option value="${item.id}" ${item.id === draft.shareholderId ? "selected" : ""}>${escapeHtml(item.name)} · ${item.type}</option>`).join("")}</select></div></div><div class="form-grid three"><div class="field"><label for="movement-amount">Valor bruto</label><input class="input" id="movement-amount" inputmode="decimal" value="${escapeHtml(draft.amount)}" placeholder="0,00" required /></div><div class="field"><label for="movement-date">Data efetiva</label><input class="input" id="movement-date" type="date" value="${escapeHtml(draft.date)}" required /></div><div class="field"><label for="movement-type">Fato gerador</label><select class="select" id="movement-type">${["Pagamento", "Crédito", "Capitalização", "Entrega em bens"].map((value) => `<option ${value === draft.eventType ? "selected" : ""}>${value}</option>`).join("")}</select></div></div><div class="form-grid"><div class="field"><label for="movement-method">Forma operacional</label><select class="select" id="movement-method">${["PIX", "TED", "Transferência interna", "Compensação", "Capitalização", "Outro"].map((value) => `<option ${value === draft.method ? "selected" : ""}>${value}</option>`).join("")}</select></div><label class="check-field"><input id="movement-legacy" type="checkbox" ${draft.legacy ? "checked" : ""}/><span><strong>Vincular à ata/2025</strong><small>A parcela coberta pelo direito fica separada da base tributável.</small></span></label></div><div class="field"><label for="movement-note">Justificativa / observação</label><textarea class="textarea" id="movement-note" placeholder="Obrigatória se o lançamento deixar saldo negativo.">${escapeHtml(draft.note)}</textarea></div>${projection.overdraw ? `<label class="overdraw-check"><input id="movement-overdraw" type="checkbox" ${draft.confirmOverdraw ? "checked" : ""}/><span><strong>Confirmo o saldo negativo.</strong> O excedente ficará registrado e precisará de classificação contábil.</span></label>` : ""}${state.movementError ? `<div class="form-error" role="alert">${escapeHtml(state.movementError)}</div>` : ""}</div><aside class="preview-card"><h3>Impacto do lançamento</h3><p>Prévia no saldo da empresa, no direito do sócio e na retenção mensal.</p>${impact}</aside></div></div><div class="modal-footer"><button class="button" data-action="close-movement" type="button">Cancelar</button><button class="button primary" type="submit">${icon("check")}${state.editingMovementId ? "Salvar nova versão" : "Registrar lançamento"}</button></div></form></section></div>`;
+      }
+      function reverseModal(state) {
+        const movement = state.movements.find((item) => item.id === state.reversingMovementId);
+        const company = DATA.companies.find((item) => item.id === movement?.companyId);
+        const shareholder = DATA.shareholders.find((item) => item.id === movement?.shareholderId);
+        return `<div class="overlay" data-action="close-reverse-overlay"><section class="modal compact-modal" role="dialog" aria-modal="true" aria-labelledby="reverse-title"><div class="modal-header"><div><h2 id="reverse-title">Estornar lançamento</h2><p>O evento original continuará visível no histórico.</p></div><button class="icon-button" data-action="close-reverse" type="button" aria-label="Fechar">${icon("x")}</button></div><form id="reverse-form"><div class="modal-body"><div class="reverse-context"><strong>${movement ? currency(movement.amount) : "Movimento indisponível"}</strong><span>${escapeHtml(company?.name ?? "")} · ${escapeHtml(shareholder?.name ?? "")}</span></div><div class="field"><label for="reverse-reason">Motivo obrigatório</label><textarea class="textarea" id="reverse-reason" minlength="10" placeholder="Descreva o motivo do estorno.">${escapeHtml(state.reverseReason)}</textarea><small>Mínimo de 10 caracteres.</small></div>${state.reverseError ? `<div class="form-error" role="alert">${escapeHtml(state.reverseError)}</div>` : ""}</div><div class="modal-footer"><button class="button" data-action="close-reverse" type="button">Cancelar</button><button class="button danger" type="submit">${icon("reverse")}Confirmar estorno</button></div></form></section></div>`;
+      }
+      function renderShareModal(state) {
+        if (state.movementModalOpen) return movementModal(state);
+        if (state.reverseModalOpen) return reverseModal(state);
+        if (!state.modalOpen) return "";
+        const groupActive = state.shareScope === "group";
+        const result = state.modalStep === "result" ? `<div class="result-box"><div class="result-status"><div><strong>Acesso criado para ${groupActive ? "o grupo" : "os sócios"}</strong><div class="entity-meta">Validade local de ${state.expiryDays} dias · documentos não enviados</div></div><span class="status regular">Ativo</span></div><div class="link-row"><input class="input" id="generated-link" aria-label="Link demonstrativo gerado" value="${escapeHtml(state.generatedLink)}" readonly /><button class="button" data-action="copy-link" type="button">${icon("copy")}Copiar</button></div><div class="result-actions"><button class="button primary" data-action="open-preview" type="button">${icon("external")}Abrir prévia</button><button class="button danger" data-action="revoke-link" type="button">Revogar simulação</button></div><div class="simulation-warning">A senha fica apenas como hash local e não aparece no link. O token funciona neste navegador.</div></div>` : "";
+        return `<div class="overlay" data-action="close-overlay"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="share-title"><div class="modal-header"><div><h2 id="share-title">Criar acesso compartilhado</h2><p>Escolha exatamente o que o cliente poderá visualizar.</p></div><button class="icon-button" data-action="close-share" type="button" aria-label="Fechar">${icon("x")}</button></div><form id="share-form"><div class="modal-body"><div class="scope-options" role="radiogroup" aria-label="Escopo do link"><button class="scope-option ${groupActive ? "active" : ""}" data-action="share-scope" data-scope="group" role="radio" aria-checked="${groupActive}" tabindex="${groupActive ? "0" : "-1"}" type="button"><span class="scope-option-icon">${icon("building")}</span><span class="scope-option-copy"><strong>Grupo completo</strong><span>Resumo, empresas, sócios e fluxo mensal.</span></span></button><button class="scope-option ${groupActive ? "" : "active"}" data-action="share-scope" data-scope="shareholders" role="radio" aria-checked="${!groupActive}" tabindex="${groupActive ? "-1" : "0"}" type="button"><span class="scope-option-icon">${icon("users")}</span><span class="scope-option-copy"><strong>Somente sócios</strong><span>Payload separado, sem empresas.</span></span></button></div><div class="form-grid"><div class="field"><label for="share-password">Senha da demonstração</label><input class="input" id="share-password" name="sharePassword" type="password" minlength="6" autocomplete="new-password" value="${escapeHtml(state.password)}" required /><small>Mínimo de 6 caracteres.</small></div><div class="field"><label for="share-expiry">Expiração</label><select class="select" id="share-expiry" name="expiryDays"><option value="3" ${state.expiryDays === 3 ? "selected" : ""}>3 dias</option><option value="7" ${state.expiryDays === 7 ? "selected" : ""}>7 dias</option><option value="15" ${state.expiryDays === 15 ? "selected" : ""}>15 dias</option><option value="30" ${state.expiryDays === 30 ? "selected" : ""}>30 dias</option></select></div></div><div class="privacy-box"><div class="privacy-row">${icon("check")}Documentos, contatos e dados bancários não entram no recorte.</div><div class="privacy-row">${icon("check")}Ações administrativas ficam indisponíveis.</div><div class="privacy-row">${icon("check")}O escopo de sócios carrega um payload separado.</div></div>${state.modalError ? `<div class="form-error" role="alert">${escapeHtml(state.modalError)}</div>` : ""}${result}<div class="simulation-warning"><strong>Limite do MVP:</strong> token, senha, validade e revogação vivem no armazenamento local. A proteção real será feita no backend.</div></div><div class="modal-footer"><button class="button" data-action="close-share" type="button">Fechar</button><button class="button primary" type="submit" ${state.generating ? "disabled" : ""}>${icon("key")}${state.generating ? "Gerando..." : state.modalStep === "result" ? "Gerar novamente" : "Gerar link"}</button></div></form></section></div>`;
+      }
+      window.MVP_UI = Object.freeze({ escapeHtml, icon, renderAdmin, renderLock, renderPublic, renderShareModal });
+    })();
+  }
+});
+
+// mvp/public-share/app.js
+var require_app = __commonJS({
+  "mvp/public-share/app.js"() {
+    (() => {
+      "use strict";
+      const DATA = window.MVP_DATA;
+      const UI = window.MVP_UI;
+      const LEDGER = window.MVP_LEDGER;
+      const OPS = window.MVP_OPERATIONS;
+      const BOOTSTRAP = window.MVP_SHARE_BOOTSTRAP ?? { token: null, record: null };
+      const appRoot = document.getElementById("app");
+      const modalRoot = document.getElementById("modal-root");
+      const toastRoot = document.getElementById("toast-root");
+      const DEFAULT_PASSWORD = "cliente2026";
+      const STORAGE_PREFIX2 = "pomin-mvp-share:";
+      const MOVEMENTS_KEY = "pomin-mvp-movements-v2";
+      const DAY_MS = 864e5;
+      const VALID_SCOPES = /* @__PURE__ */ new Set(["group", "shareholders"]);
+      const ADMIN_TABS = /* @__PURE__ */ new Set(["overview", "companies", "shareholders", "monthly", "movements", "rules"]);
+      const PUBLIC_TABS = /* @__PURE__ */ new Set(["summary", "companies", "shareholders", "monthly"]);
+      const initialRecord = BOOTSTRAP.record;
+      const state = {
+        screen: BOOTSTRAP.token ? "lock" : "admin",
+        adminTab: "overview",
+        publicTab: "summary",
+        monthlyMonth: 8,
+        shareScope: initialRecord?.scope ?? "group",
+        theme: window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light",
+        modalOpen: false,
+        mobileMenuOpen: false,
+        modalStep: "form",
+        modalError: "",
+        password: DEFAULT_PASSWORD,
+        expiryDays: Number(initialRecord?.expiryDays ?? 15),
+        generatedLink: "",
+        generating: false,
+        unlockError: "",
+        invalidShare: Boolean(BOOTSTRAP.token && !initialRecord),
+        revoked: Boolean(initialRecord?.revoked),
+        expired: Boolean(initialRecord && Number(initialRecord.expiresAt) <= Date.now()),
+        shareToken: BOOTSTRAP.token,
+        shareRecord: initialRecord,
+        movements: OPS.loadMovements(initialRecord, BOOTSTRAP.token, MOVEMENTS_KEY),
+        shareholderSnapshot: initialRecord?.scope === "shareholders" ? initialRecord.snapshot ?? null : null,
+        movementModalOpen: false,
+        reverseModalOpen: false,
+        movementDraft: OPS.defaultDraft(),
+        movementError: "",
+        editingMovementId: "",
+        reversingMovementId: "",
+        reverseReason: "",
+        reverseError: ""
+      };
+      function publicPolicy(scope) {
+        if (scope === "group") return Object.freeze({ tabs: ["summary", "companies", "shareholders", "monthly"], exposesCompanies: true });
+        return Object.freeze({ tabs: [], exposesCompanies: false });
+      }
+      const checks = OPS.runSelfChecks(publicPolicy);
+      Object.defineProperty(window, "__MVP_CHECKS__", { value: checks, configurable: false, writable: false });
+      if (!checks.passed) throw new Error("A política de escopo do MVP não passou nas verificações internas.");
+      function render(focusSelector = "") {
+        document.documentElement.classList.toggle("dark", state.theme === "dark");
+        if (state.screen === "lock") appRoot.innerHTML = UI.renderLock(state);
+        else if (state.screen === "public") appRoot.innerHTML = UI.renderPublic(state);
+        else appRoot.innerHTML = UI.renderAdmin(state);
+        modalRoot.innerHTML = UI.renderShareModal(state);
+        const dialogOpen = state.modalOpen || state.movementModalOpen || state.reverseModalOpen;
+        appRoot.toggleAttribute("inert", dialogOpen);
+        appRoot.setAttribute("aria-hidden", dialogOpen ? "true" : "false");
+        document.body.style.overflow = dialogOpen || state.mobileMenuOpen ? "hidden" : "";
+        if (focusSelector) window.requestAnimationFrame(() => document.querySelector(focusSelector)?.focus());
+      }
+      function showToast(message) {
+        toastRoot.innerHTML = `<div class="toast">${UI.icon("check")}<span>${UI.escapeHtml(message)}</span></div>`;
+        window.setTimeout(() => {
+          toastRoot.innerHTML = "";
+        }, 2800);
+      }
+      function createToken() {
+        const bytes = window.crypto.getRandomValues(new Uint8Array(16));
+        return [...bytes].map((byte) => byte.toString(16).padStart(2, "0")).join("");
+      }
+      async function digestPassword(password) {
+        if (!window.crypto?.subtle) throw new Error("Este navegador não oferece a API criptográfica necessária para a demonstração.");
+        const digest = await window.crypto.subtle.digest("SHA-256", new TextEncoder().encode(password));
+        return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
+      }
+      function shareUrl(token2) {
+        const url = new URL(window.location.href);
+        url.search = "";
+        url.hash = "";
+        url.searchParams.set("share", token2);
+        return url.toString();
+      }
+      function saveRecord(token2, record2) {
+        window.localStorage.setItem(`${STORAGE_PREFIX2}${token2}`, JSON.stringify(record2));
+      }
+      function closeShareModal() {
+        state.modalOpen = false;
+        state.modalError = "";
+        render('[data-action="open-share"]');
+      }
+      function persistMovements(movements) {
+        window.localStorage.setItem(MOVEMENTS_KEY, JSON.stringify(movements));
+      }
+      function openMovement(existingId = "") {
+        const existing = state.movements.find((movement) => movement.id === existingId && movement.status === "effective");
+        state.editingMovementId = existing?.id ?? "";
+        state.movementDraft = OPS.defaultDraft(existing);
+        state.movementError = "";
+        state.movementModalOpen = true;
+        render("#movement-company");
+      }
+      function closeMovement() {
+        state.movementModalOpen = false;
+        state.movementError = "";
+        render('[data-action="open-movement"]');
+      }
+      function saveMovement() {
+        const draft = state.movementDraft;
+        const projection = LEDGER.preview(draft, state.movements, state.editingMovementId);
+        if (!projection.company || !projection.shareholder || projection.amount <= 0 || !draft.date) state.movementError = "Informe empresa, sócio, data e valor válidos.";
+        else if (projection.overdraw && !draft.confirmOverdraw) state.movementError = "Confirme explicitamente o saldo negativo para prosseguir.";
+        else if (projection.overdraw && draft.note.trim().length < 10) state.movementError = "Para saldo negativo, informe uma justificativa com pelo menos 10 caracteres.";
+        else state.movementError = "";
+        if (state.movementError) {
+          render("#movement-amount");
+          return;
+        }
+        const original = state.movements.find((movement) => movement.id === state.editingMovementId);
+        const next = state.movements.map((movement) => movement.id === original?.id ? { ...movement, status: "superseded" } : movement);
+        const record2 = {
+          id: `mov-${Date.now()}`,
+          companyId: draft.companyId,
+          shareholderId: draft.shareholderId,
+          date: draft.date,
+          amount: projection.amount,
+          eventType: draft.eventType,
+          method: draft.method,
+          legacy: draft.legacy,
+          note: draft.note.trim(),
+          status: "effective",
+          revision: (original?.revision ?? 0) + 1,
+          revisesId: original?.id ?? ""
+        };
+        state.movements = [...next, record2];
+        persistMovements(state.movements);
+        state.movementModalOpen = false;
+        state.adminTab = "movements";
+        render('[data-action="admin-tab"][data-tab="movements"]');
+        showToast(original ? "Nova versão salva; saldos e IRRF foram recalculados." : "Lançamento registrado e fluxo mensal recalculado.");
+      }
+      function submitReverse() {
+        const reason = state.reverseReason.trim();
+        if (reason.length < 10) {
+          state.reverseError = "Informe um motivo com pelo menos 10 caracteres.";
+          render("#reverse-reason");
+          return;
+        }
+        state.movements = state.movements.map((movement) => movement.id === state.reversingMovementId ? { ...movement, status: "reversed", reversalReason: reason } : movement);
+        persistMovements(state.movements);
+        state.reverseModalOpen = false;
+        state.reverseError = "";
+        render('[data-action="admin-tab"][data-tab="movements"]');
+        showToast("Estorno registrado; posição mensal e IRRF recalculado.");
+      }
+      async function copyGeneratedLink() {
+        try {
+          await navigator.clipboard.writeText(state.generatedLink);
+          showToast("Link demonstrativo copiado.");
+        } catch {
+          document.getElementById("generated-link")?.select();
+          showToast("Selecione o link e copie manualmente.");
+        }
+      }
+      async function handleShareSubmit() {
+        if (state.password.length < 6) {
+          state.modalError = "Use uma senha com pelo menos 6 caracteres.";
+          state.modalStep = "form";
+          render("#share-password");
+          return;
+        }
+        state.generating = true;
+        state.modalError = "";
+        render();
+        try {
+          const token2 = createToken();
+          const record2 = {
+            scope: state.shareScope,
+            passwordDigest: await digestPassword(state.password),
+            expiryDays: state.expiryDays,
+            expiresAt: Date.now() + state.expiryDays * DAY_MS,
+            revoked: false,
+            ...state.shareScope === "group" ? { movements: structuredClone(state.movements) } : { snapshot: LEDGER.shareholderSnapshot(state.movements) }
+          };
+          saveRecord(token2, record2);
+          state.shareToken = token2;
+          state.shareRecord = record2;
+          state.generatedLink = shareUrl(token2);
+          state.modalStep = "result";
+          state.generating = false;
+          render("#generated-link");
+        } catch (error) {
+          state.generating = false;
+          state.modalError = error instanceof Error ? error.message : "Não foi possível criar o acesso local.";
+          render("#share-password");
+        }
+      }
+      async function handleUnlock(form) {
+        if (!state.shareRecord || state.invalidShare || state.revoked || state.expired) return;
+        const password = String(new FormData(form).get("password") ?? "");
+        try {
+          if (await digestPassword(password) !== state.shareRecord.passwordDigest) {
+            state.unlockError = "Senha incorreta ou acesso indisponível.";
+            render("#unlock-password");
+            return;
+          }
+          state.unlockError = "";
+          state.screen = "public";
+          state.publicTab = "summary";
+          render();
+        } catch {
+          state.unlockError = "Não foi possível validar a senha neste navegador.";
+          render("#unlock-password");
+        }
+      }
+      function revokeCurrentLink() {
+        if (!state.shareToken || !state.shareRecord) return;
+        const revokedRecord = { ...state.shareRecord, revoked: true };
+        saveRecord(state.shareToken, revokedRecord);
+        window.location.assign(state.generatedLink || shareUrl(state.shareToken));
+      }
+      document.addEventListener("click", async (event) => {
+        const target = event.target.closest("[data-action]");
+        if (!target) return;
+        const action = target.dataset.action;
+        if (action === "open-movement") {
+          openMovement();
+        } else if (action === "edit-movement") {
+          openMovement(target.dataset.id);
+        } else if (action === "close-movement" || action === "close-movement-overlay" && event.target === target) {
+          closeMovement();
+        } else if (action === "open-reverse") {
+          state.reversingMovementId = target.dataset.id;
+          state.reverseReason = "";
+          state.reverseError = "";
+          state.reverseModalOpen = true;
+          render("#reverse-reason");
+        } else if (action === "close-reverse" || action === "close-reverse-overlay" && event.target === target) {
+          state.reverseModalOpen = false;
+          state.reverseError = "";
+          render('[data-action="admin-tab"][data-tab="movements"]');
+        } else if (action === "open-share") {
+          state.modalOpen = true;
+          state.modalStep = "form";
+          state.modalError = "";
+          render("#share-password");
+        } else if (action === "close-share" || action === "close-overlay" && event.target === target) {
+          closeShareModal();
+        } else if (action === "share-scope" && VALID_SCOPES.has(target.dataset.scope)) {
+          state.shareScope = target.dataset.scope;
+          state.modalStep = "form";
+          state.modalError = "";
+          state.generatedLink = "";
+          render(`[data-scope="${state.shareScope}"]`);
+        } else if (action === "admin-tab" && ADMIN_TABS.has(target.dataset.tab)) {
+          state.adminTab = target.dataset.tab;
+          render(`[data-action="admin-tab"][data-tab="${state.adminTab}"]`);
+        } else if (action === "public-tab" && PUBLIC_TABS.has(target.dataset.tab)) {
+          state.publicTab = target.dataset.tab;
+          render(`[data-action="public-tab"][data-tab="${state.publicTab}"]`);
+        } else if (action === "select-month" && Number.isInteger(Number(target.dataset.month)) && Number(target.dataset.month) >= 0 && Number(target.dataset.month) < 12) {
+          state.monthlyMonth = Number(target.dataset.month);
+          render(`[data-action="select-month"][data-month="${state.monthlyMonth}"]`);
+        } else if (action === "theme") {
+          state.theme = state.theme === "dark" ? "light" : "dark";
+          render('[data-action="theme"]');
+        } else if (action === "copy-link") {
+          await copyGeneratedLink();
+        } else if (action === "open-preview" && state.generatedLink) {
+          window.location.assign(state.generatedLink);
+        } else if (action === "revoke-link") {
+          revokeCurrentLink();
+        } else if (action === "back-admin") {
+          window.location.assign(window.location.pathname);
+        } else if (action === "sign-out") {
+          state.screen = "lock";
+          state.unlockError = "";
+          render("#unlock-password");
+        } else if (action === "open-mobile-menu") {
+          state.mobileMenuOpen = true;
+          render('.mobile-drawer [data-action="nav-placeholder"]');
+        } else if (action === "close-mobile-menu" || action === "close-mobile-overlay" && event.target === target) {
+          state.mobileMenuOpen = false;
+          render('[data-action="open-mobile-menu"]');
+        } else if (action === "nav-placeholder") {
+          state.mobileMenuOpen = false;
+          render();
+          showToast("Nesta rodada, o MVP demonstra a visão consolidada e o compartilhamento.");
+        }
+      });
+      document.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (event.target.id === "share-form") await handleShareSubmit();
+        if (event.target.id === "unlock-form") await handleUnlock(event.target);
+        if (event.target.id === "movement-form") saveMovement();
+        if (event.target.id === "reverse-form") submitReverse();
+      });
+      function syncShareFields(target) {
+        if (target.id === "share-password") state.password = target.value;
+        if (target.id === "share-expiry") state.expiryDays = Number(target.value);
+      }
+      function syncMovementFields(target) {
+        const draft = state.movementDraft;
+        if (target.id === "movement-company") {
+          const company = DATA.companies.find((item) => item.id === target.value);
+          state.movementDraft = { ...draft, companyId: target.value, shareholderId: company?.allocations?.[0]?.shareholderId ?? "" };
+        } else if (target.id === "movement-shareholder") state.movementDraft = { ...draft, shareholderId: target.value };
+        else if (target.id === "movement-amount") state.movementDraft = { ...draft, amount: target.value };
+        else if (target.id === "movement-date") state.movementDraft = { ...draft, date: target.value };
+        else if (target.id === "movement-type") state.movementDraft = { ...draft, eventType: target.value };
+        else if (target.id === "movement-method") state.movementDraft = { ...draft, method: target.value };
+        else if (target.id === "movement-legacy") state.movementDraft = { ...draft, legacy: target.checked };
+        else if (target.id === "movement-note") state.movementDraft = { ...draft, note: target.value };
+        else if (target.id === "movement-overdraw") state.movementDraft = { ...draft, confirmOverdraw: target.checked };
+        else if (target.id === "reverse-reason") state.reverseReason = target.value;
+      }
+      document.addEventListener("input", (event) => {
+        syncShareFields(event.target);
+        syncMovementFields(event.target);
+      });
+      document.addEventListener("change", (event) => {
+        syncShareFields(event.target);
+        syncMovementFields(event.target);
+        if (event.target.id.startsWith("movement-")) render(`#${event.target.id}`);
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && state.movementModalOpen) {
+          event.preventDefault();
+          closeMovement();
+          return;
+        }
+        if (event.key === "Escape" && state.reverseModalOpen) {
+          event.preventDefault();
+          state.reverseModalOpen = false;
+          render('[data-action="admin-tab"][data-tab="movements"]');
+          return;
+        }
+        if (event.key === "Escape" && state.modalOpen) {
+          event.preventDefault();
+          closeShareModal();
+          return;
+        }
+        if (event.key === "Escape" && state.mobileMenuOpen) {
+          event.preventDefault();
+          state.mobileMenuOpen = false;
+          render('[data-action="open-mobile-menu"]');
+          return;
+        }
+        const currentTab = event.target.closest('[role="tab"]');
+        if (currentTab && ["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
+          const items = [...currentTab.closest('[role="tablist"]').querySelectorAll('[role="tab"]')];
+          const index = items.indexOf(currentTab);
+          const next = event.key === "Home" ? 0 : event.key === "End" ? items.length - 1 : (index + (event.key === "ArrowRight" ? 1 : -1) + items.length) % items.length;
+          event.preventDefault();
+          items[next].click();
+          return;
+        }
+        const currentRadio = event.target.closest('[role="radio"]');
+        if (currentRadio && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) {
+          const items = [...currentRadio.closest('[role="radiogroup"]').querySelectorAll('[role="radio"]')];
+          const index = items.indexOf(currentRadio);
+          const forward = event.key === "ArrowRight" || event.key === "ArrowDown";
+          event.preventDefault();
+          items[(index + (forward ? 1 : -1) + items.length) % items.length].click();
+          return;
+        }
+        if (event.key === "Tab" && (state.modalOpen || state.movementModalOpen || state.reverseModalOpen || state.mobileMenuOpen)) {
+          const dialog = document.querySelector(state.modalOpen || state.movementModalOpen || state.reverseModalOpen ? ".modal" : ".mobile-drawer");
+          const focusable = [...dialog.querySelectorAll('button:not(:disabled), input:not(:disabled), select:not(:disabled), [tabindex]:not([tabindex="-1"])')];
+          if (!focusable.length) return;
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+          if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+          } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+          }
+        }
+      });
+      window.addEventListener("popstate", () => window.location.reload());
+      render(state.screen === "lock" && !state.invalidShare && !state.revoked && !state.expired ? "#unlock-password" : "");
+    })();
+  }
+});
+
+// mvp/public-share/bootstrap.js
+var STORAGE_PREFIX = "pomin-mvp-share:";
+var token = new URLSearchParams(window.location.search).get("share");
+var record = null;
+var validMovement = (item) => item && typeof item.id === "string" && typeof item.companyId === "string" && typeof item.shareholderId === "string" && /^\d{4}-\d{2}-\d{2}$/.test(item.date) && Number.isFinite(item.amount) && item.amount > 0 && ["effective", "reversed", "superseded"].includes(item.status);
+var validSnapshot = (snapshot) => snapshot && Array.isArray(snapshot.shareholders) && Array.isArray(snapshot.months) && snapshot.shareholders.every((item) => typeof item.id === "string" && typeof item.name === "string" && typeof item.type === "string" && Number.isFinite(item.entitlement) && Number.isFinite(item.received) && !("companyId" in item) && !("companies" in item)) && snapshot.months.every((item) => typeof item.label === "string" && Number.isFinite(item.value) && Number.isFinite(item.irpf));
+if (token && /^[a-f0-9]{32}$/.test(token)) {
+  try {
+    const stored = window.localStorage.getItem(`${STORAGE_PREFIX}${token}`);
+    const parsed = stored ? JSON.parse(stored) : null;
+    const validScope = parsed?.scope === "group" || parsed?.scope === "shareholders";
+    const validDigest = typeof parsed?.passwordDigest === "string" && /^[a-f0-9]{64}$/.test(parsed.passwordDigest);
+    const validExpiry = Number.isFinite(parsed?.expiresAt) && [3, 7, 15, 30].includes(Number(parsed?.expiryDays));
+    const validPayload = parsed?.scope === "group" ? parsed.movements === void 0 || Array.isArray(parsed.movements) && parsed.movements.every(validMovement) : parsed?.snapshot === void 0 || validSnapshot(parsed.snapshot);
+    if (validScope && validDigest && validExpiry && validPayload && typeof parsed?.revoked === "boolean") record = parsed;
+  } catch {
+    record = null;
+  }
+}
+window.MVP_SHARE_BOOTSTRAP = Object.freeze({ token, record });
+if (!token) await Promise.resolve().then(() => __toESM(require_data()));
+else if (!record) await Promise.resolve().then(() => __toESM(require_empty_data()));
+else if (record.scope === "shareholders") await Promise.resolve().then(() => __toESM(require_shareholders_data()));
+else await Promise.resolve().then(() => __toESM(require_data()));
+await Promise.resolve().then(() => __toESM(require_ledger()));
+await Promise.resolve().then(() => __toESM(require_operations()));
+await Promise.resolve().then(() => __toESM(require_ui()));
+await Promise.resolve().then(() => __toESM(require_app()));
+</script>
+</body>
+</html>

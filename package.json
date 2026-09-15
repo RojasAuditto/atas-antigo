@@ -1,0 +1,24 @@
+{
+  "name": "pomin-profit-distribution",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/web",
+    "apps/api"
+  ],
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "dev:web": "npm run dev --workspace @pomin/profit-web",
+    "dev:api": "npm run dev --workspace @pomin/profit-api",
+    "env:init": "node scripts/init-env.mjs",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "audit:security": "npm audit --audit-level=high",
+    "extract:legacy-data": "node scripts/extract-legacy-data.mjs"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}

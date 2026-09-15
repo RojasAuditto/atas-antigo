@@ -1,0 +1,38 @@
+{
+  "meta": {
+    "source": "fixture sintética",
+    "generatedAt": "2026-09-01",
+    "initialDistributed": 0,
+    "deadlineDefault": "2028-12-31",
+    "ignoredStatuses": [],
+    "validOrigins": 1,
+    "groups": 1,
+    "companies": 1,
+    "shareholders": 1,
+    "availableTotal": 100
+  },
+  "origins": [
+    {
+      "id": "origin-fixture-1",
+      "companyTaxId": "00.000.000/0000-00",
+      "companyName": "Empresa de teste",
+      "groupName": "Grupo de teste",
+      "sourceStatus": "Válida",
+      "exercise": "2026",
+      "sourceDate": "2026-01-31",
+      "deadline": "2028-12-31",
+      "availableAmount": 100,
+      "allocatedAmount": 100,
+      "allocationPercent": 100,
+      "shareholders": [
+        {
+          "name": "Sócio de teste",
+          "type": "PF",
+          "taxId": null,
+          "percentage": 100,
+          "entitlement": 100
+        }
+      ]
+    }
+  ]
+}

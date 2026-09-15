@@ -1,0 +1,25 @@
+# Dependencies and build output
+node_modules/
+dist/
+.next/
+coverage/
+.data/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+*.local
+
+# Runtime artifacts
+*.log
+*.pid
+.DS_Store
+Thumbs.db
+
+# Source prototype and extracted dataset contain PII
+/index.html
+/apps/api/src/data/profit-data.json
+
+# Local screenshots
+artifacts/

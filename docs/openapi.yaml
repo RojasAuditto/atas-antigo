@@ -1,0 +1,490 @@
+openapi: 3.1.0
+info:
+  title: Atas e Lucros API
+  version: 0.2.0
+  description: BFF API-only e autoridade das regras de distribuição. Dados locais estão disponíveis apenas em desenvolvimento até Auth/Supabase existir.
+servers:
+  - url: http://localhost:3011
+    description: Desenvolvimento local
+paths:
+  /api/v1/health:
+    get:
+      operationId: getHealth
+      summary: Verifica a disponibilidade do BFF
+      responses:
+        "200":
+          description: Serviço disponível
+          headers:
+            X-Request-Id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+        "403":
+          $ref: "#/components/responses/CorsDenied"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/origins:
+    get:
+      operationId: listOrigins
+      summary: Retorna as origens locais em desenvolvimento
+      description: Em produção sempre retorna 503 até Auth/Supabase e RLS estarem implementados.
+      responses:
+        "200":
+          description: Dataset local validado
+          headers:
+            X-Request-Id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OriginsResponse"
+        "403":
+          $ref: "#/components/responses/CorsDenied"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "503":
+          $ref: "#/components/responses/OriginsUnavailable"
+  /api/v1/movements:
+    get:
+      operationId: listMovements
+      summary: Lista o histórico de movimentações
+      responses:
+        "200":
+          $ref: "#/components/responses/MovementsSuccess"
+        "403":
+          $ref: "#/components/responses/CorsDenied"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+    post:
+      operationId: createMovement
+      summary: Valida os saldos e registra uma distribuição
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MovementDraft"
+      responses:
+        "201":
+          $ref: "#/components/responses/MovementsSuccess"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+    delete:
+      operationId: resetMovements
+      summary: Limpa as movimentações do armazenamento de desenvolvimento
+      responses:
+        "200":
+          $ref: "#/components/responses/MovementsSuccess"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/movements/preview:
+    post:
+      operationId: previewMovement
+      summary: Calcula o impacto autoritativo sem persistir
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MovementDraft"
+      responses:
+        "200":
+          description: Impacto validado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MovementPreviewResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/movements/{id}/reversal:
+    post:
+      operationId: reverseMovement
+      summary: Estorna uma movimentação efetiva preservando auditoria
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
+      responses:
+        "200":
+          $ref: "#/components/responses/MovementsSuccess"
+        "404":
+          $ref: "#/components/responses/ValidationError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/movements/import:
+    post:
+      operationId: importLegacyMovements
+      summary: Importa de forma idempotente o histórico local anterior
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/Movement"
+      responses:
+        "200":
+          $ref: "#/components/responses/MovementsSuccess"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+components:
+  headers:
+    RequestId:
+      description: Identificador de correlação da requisição.
+      schema:
+        type: string
+  responses:
+    CorsDenied:
+      description: Origem do navegador não autorizada
+      headers:
+        X-Request-Id:
+          $ref: "#/components/headers/RequestId"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    InternalError:
+      description: Falha interna sem exposição de detalhes técnicos
+      headers:
+        X-Request-Id:
+          $ref: "#/components/headers/RequestId"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    ServiceUnavailable:
+      description: Configuração segura do serviço indisponível
+      headers:
+        X-Request-Id:
+          $ref: "#/components/headers/RequestId"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    OriginsUnavailable:
+      description: Origens bloqueadas até a implementação de autenticação e dados
+      headers:
+        X-Request-Id:
+          $ref: "#/components/headers/RequestId"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    MovementsSuccess:
+      description: Estado completo e validado das movimentações
+      headers:
+        X-Request-Id:
+          $ref: "#/components/headers/RequestId"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/MovementsResponse"
+    ValidationError:
+      description: Entrada ou transição rejeitada pelas regras de domínio
+      headers:
+        X-Request-Id:
+          $ref: "#/components/headers/RequestId"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+  schemas:
+    ResponseMeta:
+      type: object
+      additionalProperties: false
+      required: [requestId]
+      properties:
+        requestId:
+          type: string
+    HealthResponse:
+      type: object
+      additionalProperties: false
+      required: [data, meta]
+      properties:
+        data:
+          type: object
+          additionalProperties: false
+          required: [status, service]
+          properties:
+            status:
+              type: string
+              const: ok
+            service:
+              type: string
+              const: atas-e-lucros-api
+        meta:
+          $ref: "#/components/schemas/ResponseMeta"
+    OriginsResponse:
+      type: object
+      additionalProperties: false
+      required: [data, meta]
+      properties:
+        data:
+          type: object
+          additionalProperties: false
+          required: [meta, origins]
+          properties:
+            meta:
+              $ref: "#/components/schemas/ProfitDataMeta"
+            origins:
+              type: array
+              items:
+                $ref: "#/components/schemas/Origin"
+        meta:
+          $ref: "#/components/schemas/ResponseMeta"
+    ProfitDataMeta:
+      type: object
+      additionalProperties: false
+      required:
+        - source
+        - generatedAt
+        - initialDistributed
+        - deadlineDefault
+        - ignoredStatuses
+        - validOrigins
+        - groups
+        - companies
+        - shareholders
+        - availableTotal
+      properties:
+        source:
+          type: string
+          minLength: 1
+        generatedAt:
+          type: string
+          format: date
+        initialDistributed:
+          type: number
+          minimum: 0
+        deadlineDefault:
+          type: string
+          format: date
+        ignoredStatuses:
+          type: array
+          items:
+            type: string
+            minLength: 1
+        validOrigins:
+          type: integer
+          minimum: 0
+        groups:
+          type: integer
+          minimum: 0
+        companies:
+          type: integer
+          minimum: 0
+        shareholders:
+          type: integer
+          minimum: 0
+        availableTotal:
+          type: number
+          minimum: 0
+    Origin:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - companyTaxId
+        - companyName
+        - groupName
+        - sourceStatus
+        - exercise
+        - sourceDate
+        - deadline
+        - availableAmount
+        - allocatedAmount
+        - allocationPercent
+        - shareholders
+      properties:
+        id:
+          type: string
+          minLength: 1
+        companyTaxId:
+          type: string
+          minLength: 1
+        companyName:
+          type: string
+          minLength: 1
+        groupName:
+          type: string
+          minLength: 1
+        sourceStatus:
+          type: string
+          minLength: 1
+        exercise:
+          type: string
+          minLength: 1
+        sourceDate:
+          type: string
+          format: date
+        deadline:
+          type: string
+          format: date
+        availableAmount:
+          type: number
+          minimum: 0
+        allocatedAmount:
+          type: number
+          minimum: 0
+        allocationPercent:
+          type: number
+          minimum: 0
+        shareholders:
+          type: array
+          items:
+            $ref: "#/components/schemas/Shareholder"
+    Shareholder:
+      type: object
+      additionalProperties: false
+      required: [name, type, taxId, percentage, entitlement]
+      properties:
+        name:
+          type: string
+          minLength: 1
+        type:
+          type: string
+          enum: [PF, PJ]
+        taxId:
+          type: [string, "null"]
+          minLength: 1
+        percentage:
+          type: number
+          minimum: 0
+          maximum: 100
+        entitlement:
+          type: number
+          minimum: 0
+    MovementDraft:
+      type: object
+      additionalProperties: false
+      required: [originId, shareholderTaxId, shareholderName, amount, date, reference, proofName, note, paymentMethod]
+      properties:
+        originId:
+          type: string
+        shareholderTaxId:
+          type: [string, "null"]
+        shareholderName:
+          type: string
+        amount:
+          type: number
+        date:
+          type: string
+          format: date
+        reference:
+          type: string
+        proofName:
+          type: string
+        note:
+          type: string
+        paymentMethod:
+          type: string
+          enum: [TED, PIX, "Transferência interna", Outro]
+    Movement:
+      type: object
+      additionalProperties: false
+      required: [id, originId, groupName, companyTaxId, companyName, shareholderTaxId, shareholderName, amount, date, reference, proofName, note, paymentMethod, status, createdAt, createdBy]
+      properties:
+        id:
+          type: string
+        originId:
+          type: string
+        groupName:
+          type: string
+        companyTaxId:
+          type: string
+        companyName:
+          type: string
+        shareholderTaxId:
+          type: [string, "null"]
+        shareholderName:
+          type: string
+        amount:
+          type: number
+          exclusiveMinimum: 0
+        date:
+          type: string
+          format: date
+        reference:
+          type: string
+        proofName:
+          type: string
+        note:
+          type: string
+        paymentMethod:
+          type: string
+          enum: [TED, PIX, "Transferência interna", Outro]
+        status:
+          type: string
+          enum: [effective, reversed]
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+        reversedAt:
+          type: string
+          format: date-time
+        reversedBy:
+          type: string
+    MovementsResponse:
+      type: object
+      additionalProperties: false
+      required: [data, meta]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Movement"
+        meta:
+          $ref: "#/components/schemas/ResponseMeta"
+    MovementPreviewResponse:
+      type: object
+      additionalProperties: false
+      required: [data, meta]
+      properties:
+        data:
+          type: object
+          description: Saldos atuais e projetados de sócio, empresa e grupo calculados pelo backend.
+        meta:
+          $ref: "#/components/schemas/ResponseMeta"
+    ApiError:
+      type: object
+      additionalProperties: false
+      required: [code, message]
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: array
+          items: {}
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      required: [error, requestId]
+      properties:
+        error:
+          $ref: "#/components/schemas/ApiError"
+        requestId:
+          type: string

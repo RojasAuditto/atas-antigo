@@ -1,0 +1,6 @@
+Options -Indexes
+
+RewriteEngine On
+RewriteRule ^index\.html$ - [F,L,NC]
+RewriteRule ^apps/api/src/data/profit-data\.json$ - [F,L,NC]
+RewriteRule (^|/)\.env(\.|$) - [F,L,NC]
