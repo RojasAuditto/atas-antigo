@@ -19,7 +19,6 @@ Thumbs.db
 
 # Source prototype and extracted dataset contain PII
 /index.html
-/apps/api/src/data/profit-data.json
 
 # Local screenshots
 artifacts/
